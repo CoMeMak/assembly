@@ -1,0 +1,327 @@
+  body, html{height:100%; padding: 0; margin: 0; }
+  
+  
+    
+  /*
+    div#jsoneditor li 
+    {
+        border-width: 0;
+        margin: 0;
+        padding: 0;
+        box-sizing: content-box;
+        position: relative;
+        
+    }
+    
+    div#jsoneditor ul 
+    {
+        border-width: 0;
+        margin: 0;
+        padding: 0;
+        list-style-type: disc;   
+        box-sizing: content-box;
+        position: relative;
+
+        
+    }
+  */
+  
+    a {
+        text-decoration: none; 
+		color: lightslategrey;
+    }
+    
+    
+    ul#workflow, ul#tasks, ul#actors, ul#controls, ul#settings {
+      list-style-type: none; margin: 2px; padding: 2px; overflow: hidden; white-space:nowrap;       
+    }
+
+    li.rightRounded, li.rounded, li.leftRounded {
+      font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+      float: left; margin: 2px; padding: 5px; border-width: 1px; border-style: solid; 
+      cursor: pointer;      
+      height: 22px;
+      border-color: black;      
+      padding-top: 9px;
+    }
+    
+    .activeTask 
+    {
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+          margin: 15px; margin-bottom: 10px; padding: 8px; border-width: 1px; border-style: solid; background-color: white;
+          border-color: black;
+          text-align: left;
+          vertical-align: top;
+          background-color: khaki;
+          display: inline-block;
+          border-radius: 4px 12px 12px 4px;
+          margin-right: 0;
+          padding-right: 7px;
+    }
+    
+    
+    .rightRounded {
+        border-radius: 4px 12px 12px 4px;
+        padding-right: 7px;
+    }
+    
+    
+    .leftRounded {
+        border-radius: 12px 4px 4px 12px;
+        padding-left: 7px;
+    }
+    
+    .rounded {
+        border-radius: 12px;
+        padding-left: 7px;
+        padding-right: 7px;
+    }
+
+    
+    .if {
+        background-color: cornsilk;
+    }
+    
+    .settings {
+        background-color: whitesmoke;
+        
+    }
+    
+    .if-cond {
+        background-color: cornsilk;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        font-size: 15px;
+        width: 60px;
+        color: dimgrey;
+    }
+    
+    .while {
+        background-color: aliceblue;
+    }
+    
+    .repeat {
+        background-color: PapayaWhip;
+    }
+    
+    .break {
+        background-image: linear-gradient(to right, aliceblue , PapayaWhip);
+    }
+    
+    .while-cond {
+        background-color: aliceblue;
+        
+        padding: 0;
+        margin: 0;
+        border: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        font-size: 15px;
+        width: 60px;
+        color: dimgrey;
+    }
+
+    .repeat-cond {
+        background-color: PapayaWhip;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        font-size: 15px;
+        width: 60px;
+        color: dimgrey;
+    }
+
+    .export-var {
+        background-color: whitesmoke;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        font-size: 15px;
+        width: 60px;
+        color: dimgrey;
+    }
+    
+    .eval {
+        background-color: whitesmoke;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        font-size: 15px;
+        width: 60px;
+        color: dimgrey;
+    }    
+    
+    .embossed-light {
+      border: 1px solid rgba(0,0,0,0.1);
+      border-right-width: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    
+   
+    .toolset {
+        background:rgba(220, 220, 220,0.3); 
+        padding: 10px 0 0 10px;
+        height: 300px;
+    }
+    
+    .help_ul {
+        padding: 0;
+        padding-left: 15px;
+        margin: 0;
+        margin-top: 5px;
+    }
+    
+    .help_p {
+        margin: 5px;        
+    }
+    
+    .workflow
+    {
+        padding: 0px;
+        padding-left: 5px;
+        height: 80%;
+        background-color: white;
+        background:rgba(255,255,255,0.3);
+        min-height: 400px;
+    }
+    
+    h1 {
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 18px;
+        padding: 0;
+        padding-top: 5px;
+        padding-left: 8px;
+        padding-bottom: 6px;
+        maring: 0;
+        display: block;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        color: slategrey;
+    }
+    
+    h2 {
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 25;
+        padding: 0;
+        padding-top: 5px;
+        padding-left: 8px;
+        padding-bottom: 6px;
+        maring: 0;
+        display: block;
+        margin-block-start: 0;
+        margin-block-end: 0;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+        font-weight: bold;
+        color: slategrey;
+    }
+    
+    
+    hr { 
+      border-top: 1px dotted #8c8b8b;
+      border-bottom: 1px dotted #fff;
+      margin-inline-end: 0.5em;      
+    }
+    
+    .task {
+        background-color: khaki;
+    }
+    
+    .actor {
+        background-color: white;
+    }
+	
+	.li-selected {
+		border-color: DarkSeaGreen !important;
+		border-width: 2px !important;
+		margin-top: 1px !important;
+	}
+	.li-executing {
+		border-color: Brown !important;
+		border-width: 2px !important;
+		margin-top: 1px !important;
+	}
+	
+    
+    .button {
+        border-radius: 3px;
+        margin-bottom: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+          margin: 3px; padding-top: 8px; padding-left: 10px; padding-right: 10px; padding-bottom: 6px; border-width: 1px; border-style: solid; 
+          cursor: pointer;      
+          height: 18px;
+          border-color: black;
+          margin-bottom: 1px;
+          display: inline-block;
+    }
+    
+    .button:hover {
+        background-color: black;
+        border-color: black;
+        border-radius: 3px;
+        color: white;
+    }
+    
+    .clicked
+    {
+        background-color: black;
+        border-color: black;
+        border-radius: 3px;
+        color: white;
+    }
+    
+    .simulator
+    {
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+        position:absolute;
+        top:0;
+        right:0;
+        text-align: center;     
+        z-index: -1;
+        background-color: rgba(255, 255, 255,0);
+    }
+    
+    .embossed-td {
+      border: 1px solid rgba(0,0,0,0.1);
+      border-right-width: 0;
+      border-left-width: 0;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    
+    .sim_controls
+    {
+        z-index: 100; position: absolute; 
+        padding: 10px;
+        border-width: 0;
+        border-style: solid;
+        border-left-width: 1px;
+        border-radius: 0px 0px 0px 15px;
+        border-bottom-width: 1px;
+        display: block; top: 0px; right: 0px;
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+        background-color: rgba(0, 0, 0,0.015);
+        border-color: rgba(0,0,0,0.1);
+    }
+    .sim_input {
+        background-color: rgba(255, 255, 255,0.5);
+        width: 50px;
+        font-family: 'Big Shoulders Text', Arial Narrow;
+        border-radius: 5px;
+        
+    }
+    
+    .saveButton {
+        margin-top: 24px; margin-left: 5px;display: inline-block;font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;cursor: pointer; color: grey;        
+    }
+    
+    .saveButton:hover {
+        color: black;
+    }
+    
+	
+	
