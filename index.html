@@ -777,9 +777,9 @@ function startExecution()
         else
         {
 			console.log(step.attr("name"));
-			if(step.attr("name") != "wrapper" && step.attr("name") != "if") code += "$('#" + step.attr("id") + "').addClass('li-executing');";
+			if(step.attr("name") != "wrapper" && step.attr("name") != "if" && step.attr("name") != "while") code += "$('#" + step.attr("id") + "').addClass('li-executing');";
             code += generator[step.attr("name")](step);
-			if(step.attr("name") != "wrapper" && step.attr("name") != "if") code += "$('#" + step.attr("id") + "').removeClass('li-executing');";
+			if(step.attr("name") != "wrapper" && step.attr("name") != "if" && step.attr("name") != "while") code += "$('#" + step.attr("id") + "').removeClass('li-executing');";
         }
 		step_count++;
     }
