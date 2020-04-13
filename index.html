@@ -269,18 +269,16 @@
         }        
         else if(ui_item.attr("name") == "setParams")
         {
-             var settings = JSON.parse(atob(ui_item.attr("params")));
              ui_item.click(function() {
-                Params = settings;
+                window.Params = JSON.parse(atob(ui_item.attr("params")));
                 $("#ParamsContext").click();                
              });
              $("#ParamsContext").click();
         }
         else if(ui_item.attr("name") == "setVars")
         {
-             var variables = JSON.parse(atob(ui_item.attr("params")));
              ui_item.click(function() {
-                Vars = variables;
+                window.Vars = JSON.parse(atob(ui_item.attr("params")));
                 $("#VarsContext").click();                
              });
              $("#VarsContext").click();
@@ -891,7 +889,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 <hr>
 <ul id="actors" style="user-select: none;">
   <li id="wp" name="moveTo" class="draggable actor rightRounded" style="padding-right: 45px;">move to</li>
-  <li name="moveRelative" title="Will move relative to the current position by the amount specified by the dP and dR parameters." class="draggable actor rightRounded" style="padding-top: 7px;padding-bottom: 7px;">move <font size="4">⥅</font>dP <font size="4">⤽</font>dR</li>
+  <li name="moveRelative" title="Will move relative to the current position by the amount specified by the dP and dR parameters." class="draggable actor rightRounded" style="padding-top: 7px;padding-bottom: 7px;"><font size="4">⥅</font>dP <font size="4">⤽</font>dR</li>
   <li name="gripperOpen" class="draggable actor rightRounded"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="gripperOpen" src="img/open.png" height="15"></td><td valign="top" name="gripperOpen">&nbsp;open</td></tr></table></li>
   <li name="gripperClose" class="draggable actor rightRounded"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="gripperClose" src="img/close.png" height="15"></td><td valign="top" name="gripperClose">&nbsp;close</td></tr></table></li>
   <li name="gripperAction" class="draggable actor rightRounded"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="gripperAction" src="img/gripper.png" height="15"></td><td name="gripperAction" valign="top">&nbsp;action</td></tr></table></li>
@@ -907,8 +905,8 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
   <li name="break" class="draggable break leftRounded">break</li>
 </ul>
 <ul id="settings">
-  <li name="setParams" title="Sets the robot parameters to their current value in the Parameters tab." class="draggable settings rightRounded" style="padding-right: 7px; padding-top: 8px; padding-bottom: 6px;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="setParams" src="img/params.png" height="13"></td><td valign="top" name="setParams">&nbsp;set</td></tr></table></li>
-  <li name="setVars" title="Sets the contents of the Vars object as currently defined in the Variables tab." class="draggable settings rightRounded"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="setVars" src="img/vars.png" height="13"></td><td valign="top" name="setVars">&nbsp;set</td></tr></table></li>  
+  <li name="setParams" title="Sets the robot parameters to their current value in the Parameters tab." class="draggable settings rightRounded" style="padding-right: 7px; padding-top: 8px; padding-bottom: 6px; background-color: beige;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-left: 2px;"><img name="setParams" src="img/params.png" height="13"></td><td valign="top" name="setParams">&nbsp;set</td></tr></table></li>
+  <li name="setVars" title="Sets the contents of the Vars object as currently defined in the Variables tab." class="draggable settings rightRounded" style=" background-color: floralwhite;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="setVars" src="img/vars.png" height="14"></td><td valign="top" name="setVars">&nbsp;set</td></tr></table></li>  
   <!--
   <li name="export" title="Sets the content of the indicated variable to that of the corresponding variable in the global scope (window.Vars)." class="draggable settings rightRounded" style="padding-right: 1px;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img src="img/vars.png" height="15"></td><td>&nbsp;export<select class="export-var object"></select></td></tr></table></li>  
   -->
@@ -1219,6 +1217,7 @@ function setRobotVars()
 			{
 				sel += ", .li-selected";
 			}
+            
 			$(sel).css("background-color","");
             $(sel).css("background-repeat", "no-repeat");
             $(sel).css("background-image","url('" + snapshot + "')");        
@@ -1230,6 +1229,15 @@ function setRobotVars()
             $(sel).attr("params",JSON.stringify(params));
             $(sel).attr("title","Will move to x: " + params.tcp.x + ", y: " + params.tcp.y + ", z: " + params.tcp.z + ", rx: " + params.tcp.rx  + ", ry: " + params.tcp.ry + ", rz: " + params.tcp.rz);
         }
+    }
+    
+    if($(".li-selected").attr("name") == "setVars")
+    {
+        $(".li-selected").attr("params",btoa(JSON.stringify(Vars)));
+    }
+    else if($(".li-selected").attr("name") == "setParams")
+    {
+        $(".li-selected").attr("params",btoa(JSON.stringify(Params)));
     }
 }
     
