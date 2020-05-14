@@ -36,6 +36,8 @@ The Params and vars objects can be edited by users using an embedded JSON editor
 
 To enable users to easily edit the Params and Vars objects, Assembly embeds the JSON editor by Jos de Jong: https://jsoneditoronline.org/
 
+Go ahead and visit that website to try out that JSON editor, which is also used by Assembly. If you can use it, you are already halfway through on your way to becoming a robot programmer!
+
 To assign values to variables and parameters, Assembly provides so-called *Set* actors, which--when dragged and dropped to the workflow region--take a snapshot of the Params or Vars objects. If an Assembly actor needs a parameter or uses a variable, it will try to read it from the Params or Vars object, respectively. The documentation of each actors clearly states, which parameters are needed. So, when using an actor that needs a parameter or variable, you must first set the value of that parameter or variable, or create that variable in the Vars object using the JSON editor beforehand. Then place the *Set* Params or Vars actor before the actual actor you indend to use. The *Set* actor now contains a snapshot of the Vars or Params object. When executing the workflow, the code generator will use that snapshot to set the value of the actual Vars or Params object, which are then used by the subsequent actors. 
 
 This simple mechanism might not be as intuitive for beginners as Blockly variables and parameters. But once you understand the concept of a global variable, it will become easy to parameterize actors and to use variables. 
@@ -51,3 +53,7 @@ A workflow can be saved as a task, which can be reused within other workflows. T
 ### The Robot
 
 ### Supporting Functions
+
+# Exit Strategy
+
+...
