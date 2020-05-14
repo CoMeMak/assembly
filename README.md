@@ -38,7 +38,9 @@ To enable users to easily edit the Params and Vars objects, Assembly embeds the 
 
 To assign values to variables and parameters, Assembly provides so-called *Set* actors, which--when dragged and dropped to the workflow region--take a snapshot of the Params or Vars objects. If an Assembly actor needs a parameter or uses a variable, it will try to read it from the Params or Vars object, respectively. The documentation of each actors clearly states, which parameters are needed. So, when using an actor that needs a parameter or variable, you must first set the value of that parameter or variable, or create that variable in the Vars object using the JSON editor beforehand. Then place the *Set* Params or Vars actor before the actual actor you indend to use. The *Set* actor now contains a snapshot of the Vars or Params object. When executing the workflow, the code generator will use that snapshot to set the value of the actual Vars or Params object, which are then used by the subsequent actors. 
 
-This simple mechanism might not be as intuitive for beginners. But once you understand the concept of a global variable, it will become easy to parameterize actors and to use variables.
+This simple mechanism might not be as intuitive for beginners as Blockly variables and parameters. But once you understand the concept of a global variable, it will become easy to parameterize actors and to use variables. 
+
+There are several advantages to this approach. First, actor creators do not have to think about complex actor structures, which can fit all the variables and parameters needed without using lots of space. And second, with relatively little effort, unexperienced programmers can master variable assignments in a textual mode, which represents the first step towards becoming a real programmer. And third, more experienced users can fit in entire Javascript expressions into variables and parameters, which are evaluated at runtime. 
 
 ### Tasks
 
