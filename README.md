@@ -8,7 +8,7 @@ Assembly is an easy to use web-based robot programming environment, which builds
 
 Assembly programs or workflows are to be written and read left to right, like a text in English or other Indo-European languages. Unlike in textual programming languages, there is no explicit indentation, only a linear enchaining of actor instances, which form a worflow and produce effects in the blackboard. A workflow may be conceived of as a more o less lengthy and complex phrase, which--when properly formulated--achieves the desired effect. Consequently, each actor instance may be regarded as being a short sentence in that phrase. At the same time, actors emcompass the semantics necessary to generate code in textual programming languages.
 
-## Programming Concepts and Entities
+## Programming Concepts
 
 ### Actors / Blocks
 
@@ -54,6 +54,8 @@ A workflow can be saved as a task, which can be reused within other workflows. T
 
 ### Supporting Functions
 
-# Exit Strategy
+## Architecture
+
+## Exit Strategy
 
 ...
