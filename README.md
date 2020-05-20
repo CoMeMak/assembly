@@ -1,5 +1,5 @@
 # a s s e m ⛆ b l y
-An open source, web-based robot programming environment
+An open source, web-based robot programming environment for Google Chrome.
 
 ## Introduction
 
@@ -46,9 +46,17 @@ There are several advantages to this approach. First, actor creators do not have
 
 ### Tasks
 
-A workflow can be saved as a task, which can be reused within other workflows. Tasks are an easy way to organize robot programs. In Assembly, tasks are simply stored in the browser's bookmarks bar and can be loaded by clicking on that bookmark. Task collections can be organized in folders and exported using the browser's bookmarks management features. Tasks can also be easily shared on web sites and dragged by users onto their browser's bookmarks bar. 
+A workflow consisting of a series of actors linked together can be saved as a task. Tasks can be reused within other tasks. Thus, tasks are an easy way to organize robot programs. In Assembly, tasks are simply stored in the browser's bookmarks bar and can be loaded by clicking on that bookmark, with the Assembly web page open in the current browser tab. Task collections can be organized in folders and exported using the browser's bookmarks management features.  
+
+When saving a task, snapshots of the Params and Vars objects are saved as well. When loading a task, the content of the global Params and Vars objects is overwritten by the content of the saved snapshots. 
+
+When loading a saved task, it will also be placed as a task actor in the Actor and Task Library region. To use saved tasks within other tasks they former need to be loaded first, one by one. As a best practice, you can save an empty task and load that one last. Then, you can use the other tasks you loaded within the new, empty task. Before loading a task that uses other tasks, the latter need to be loaded first. So, in a sense, tasks are both analogous to procedures and libraries in other programming languages. Assembly will tell users about which tasks they need to load first when trying to load a task that uses other tasks. 
+
+The idea behind tasks is threefold. First, they allow you to save robot programs easily. Second, they allow you to reuse tasks in other tasks using a programming concept called aggregation. And third, tasks can be shared with other users by exporting them as browser bookmarks. 
 
 ### The Simulator
+
+
 
 ### The Robot
 
