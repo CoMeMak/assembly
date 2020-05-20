@@ -52,7 +52,7 @@ When saving a task, snapshots of the Params and Vars objects are saved as well. 
 
 When loading a saved task, it will also be placed as a task actor in the Actor and Task Library region. To use saved tasks within other tasks they former need to be loaded first, one by one. As a best practice, you can save an empty task and load that one last. Then, you can use the other tasks you loaded within the new, empty task. Before loading a task that uses other tasks, the latter need to be loaded first. So, in a sense, tasks are both analogous to procedures and libraries in other programming languages. Assembly will tell users about which tasks they need to load first when trying to load a task that uses other tasks. 
 
-The idea behind tasks is threefold. First, they allow you to save robot programs easily. Second, they allow you to reuse tasks in other tasks using a programming concept called aggregation. And third, tasks can be shared with other users by exporting them as browser bookmarks. 
+The idea behind tasks is threefold. First, they allow you to organizie and save robot programs directly within the browser. Second, they allow you to reuse tasks in other tasks using a programming concept called aggregation. And third, tasks can be shared with other users by exporting them as browser bookmarks. 
 
 ### The Simulator
 
