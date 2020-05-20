@@ -56,7 +56,13 @@ The idea behind tasks is threefold. First, they allow you to organizie and save 
 
 ### The Simulator
 
+Assembly uses an adapted version of the Glumb 6 DOF (degrees of freedom) robot simulator by Maximilian Beck (http://robot.glumb.de/). The simulator is embedded in the right hand side of the Assembly environment. It can be controlled either using the text boxes in the upper left side of the page or using the mouse. In the latter case, the ALT key needs to be kept pressed while dragging the robot with the left mouse button pressed. Click on the robot's tool center point (TCP) to drag it around. Since this robot does not have an attached tool, the TCP is represented by the final segment, from where the red-green-blue Carthesian coordinate arrows originate. Dragging the robot without pressing the ALT tab will rotate the entire scene so that you can get a better perspective on the robot's position in 3D space.
 
+The exact position of the robot's TCP is updated in the controls area and the Robot object in the blackboard. The Robot object also contains the axis angles corresponding to a certain TCP pose (i.e., Carthesian X,Y,Z position plus orientation expressed as Euler rotation angles around the respective axes: RX, RY, RZ). 
+
+A snapshot of the current robot pose, including the viewing perspective is stored as a thumbnail as part of the "move to" actor. When used in a workflow, this actor will move the robot to that pose. This way, different poses can be stored by first dragging the robot to the desired position and then dragging a "move to" actor to the workflow. This corresponds to a teach in procedure, which is a common way of programming robot behaviors.
+
+Besides making it easy to teach robot moves, the simulator can also be used to learn some things about direct and inverse kinematics -- the bread and the butter of robotics. The robot has some built in axes limitations, which will turn the respective axes red if those limits are exceeded. So try to teach poses that don't break those limits; otherwise a real robot might not be able to reach that pose.
 
 ### The Robot
 
