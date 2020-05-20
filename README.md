@@ -70,6 +70,14 @@ Simulations are a rough approximation of reality. Moreover, they are a construct
 
 ### The Robot
 
+Assembly can be used both for offline and online robot programming. In the first case, you can run programms in the embedded simulator. In the second case, programs will be generated and sent to a web service, which provides low-level robot handling functions. Currently, Universal Robots (https://www.universal-robots.com/) are supported.
+
+To connect to the robot, just enable the swith on the left side of the simulator controls. When the robot is connected, you will no longer be able to control it in the simulation (e.g., by dragging the TCP) or using the simulator controls. The simulator reflects the current pose of the physical robot. The robot's pose can be changed using the robot own human-machine interface (HMI) or manually using, for example, the freedrive mode in URs Polyscope HMI. All the other actors will work just like in the simulator--except for the actors, which control the robot's end effector (e.g., gripper), which currently do not have an implementation in the simulation.
+
+To recapitulate: When the robot checkbox is enabled, the physical robot controls the simulation. The other way around would increase the risk of injury. 
+
+When pressing the play button in Assembly, the current task is sent to the robot and executed. So please keep a safe distance from the robot when doing so.
+
 ### Supporting Functions
 
 ## Architecture
