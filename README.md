@@ -1,4 +1,4 @@
-# a s s e m b l y
+# a s s e m ⛆ b l y
 An open source, web-based robot programming environment
 
 ## Introduction
