@@ -42,6 +42,7 @@
   <link rel="stylesheet" href="./scripts/jsoneditor.css" />
   <link rel="stylesheet" href="./scripts/jquery-ui.css" />
   <link rel="stylesheet" href="draggable.css" />
+  <link rel="stylesheet" href="switch.css" />
   
   
     <script src="js/require.js" charset="utf-8"></script>
@@ -1065,7 +1066,7 @@ indent();
 </script>
 
 <div id="sim_controls" align="center" class="sim_controls" onmouseover="rotate = false;" onmouseout="rotate = true;">
-Robot: <input id="robot_connected" type="checkbox">
+Connect to robot &nbsp;<label class="switch"><input id="robot_connected" type="checkbox"><span class="slider round"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 	x: <input type="number" class="sim_input" id="x" step="1" value="300"></input>&nbsp;
 	y: <input type="number" class="sim_input" id="y" step="1" value="300"></input>&nbsp;
@@ -1073,7 +1074,7 @@ Robot: <input id="robot_connected" type="checkbox">
 	rx (roll): <input type="number" class="sim_input" id="rx" step="1" value="0"></input>&nbsp;
     ry (pitch): <input type="number" class="sim_input" id="ry" step="1" value="180"></input>&nbsp;
 	rz (yaw): <input type="number" class="sim_input" id="rz" step="1" value="0"></input>
-	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>a s s e m <a href="http://www.comemak.at/assembly" title="About: a s s e m ⛆ b l y" target="_blank"><font color="steelblue">⛆</font></a><font color="grey"> b l y <sup><font size="1">alpha</font></sup></b>&nbsp;&nbsp;&nbsp;</font>
+	 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>a s s e m <a href="https://github.com/CoMeMak/assembly" title="Source code and more information on GitHub" target="_blank"><font color="steelblue">⛆</font></a><font color="grey"> b l y <sup><font size="1">alpha</font></sup></b>&nbsp;&nbsp;&nbsp;</font>
 	</div>
 
 
