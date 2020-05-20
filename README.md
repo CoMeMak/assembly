@@ -66,7 +66,7 @@ Besides making it easy to teach robot moves, the simulator can also be used to l
 
 Please note that the robot moves and poses in this simulator will not correspond exactly to the moves of a real robot. This simulator is only there to help you sketch a robot program without using an actual physical robot. When testing a program created using the simulator with a real robot, please stand at a safe distance and observe carefully how the robot moves and whether those moves are what you expected. Also, from safety reasons, Assembly limits the robot speed and does not allow you to change it in the simulator. 
 
-Simulations are a rough approximation of reality. Moreover, they are a construction of reality, which may be different for anyone and any program. So use the simulator to leard how to program robots. Always test each move with a real robot at low speed and while keeping a safety distance. 
+Simulations are a rough approximation of reality. Moreover, they are a construction of reality, which may be different for anyone and any program. So use the simulator primarily to learn how to program robots. Always test each move with a real robot at low speed and while keeping a safety distance. 
 
 ### The Robot
 
