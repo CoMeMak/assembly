@@ -1157,6 +1157,12 @@ function setRobotVars()
               $("#rx").val(data.rx.toFixed(2));
               $("#ry").val(data.ry.toFixed(2));
               $("#rz").val(data.rz.toFixed(2));              
+        })
+        .fail(function() {
+          $( "#robot_connected" ).prop( "checked", false );
+          $("#elementName").text("Error");
+          $("#elementHelp").html("<hr size='1' />Cannot connect to the robot! There is no service running at: http://localhost:5001/robot");
+          $("#elementHelp").show();
         });
     }
         Robot.tcp.x = $("#x").val();
