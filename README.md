@@ -3,6 +3,7 @@ An open source, web-based robot programming environment for Google Chrome.
 
 Tudor B. Ionescu
 Vienna Technical University
+
 [![DOI](https://zenodo.org/badge/250469792.svg)](https://zenodo.org/badge/latestdoi/250469792)
 
 ## Online Version
