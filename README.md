@@ -6,6 +6,8 @@ Vienna Technical University
 
 [![DOI](https://zenodo.org/badge/250469792.svg)](https://zenodo.org/badge/latestdoi/250469792)
 
+Cite as: Tudor B. Ionescu (2020). Assembly - An open source, web-based robot programming environment. GitHub. DOI: 10.5281/zenodo.3839314
+
 ## Online Version
 
 You can use Assembly at: https://assembly.comemak.at
