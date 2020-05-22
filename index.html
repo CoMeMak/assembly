@@ -378,17 +378,17 @@
             
             if(newelement.attr("name") == "if")
             {
-                $("<li name='wrapper' head='" + rid + "' class='if rightRounded'>&nbsp;</li>").insertAfter( "#newElement" );
+                $("<li name='wrapper' head='" + rid + "' class='if rightRounded'>&nbsp;&nbsp;</li>").insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else if(newelement.attr("name") == "while")
             {
-                $( "<li name='wrapper' head='" + rid + "' class='while rightRounded'>&nbsp;</li>" ).insertAfter( "#newElement" );
+                $( "<li name='wrapper' head='" + rid + "' class='while rightRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else if(newelement.attr("name") == "repeat")
             {
-                $( "<li name='wrapper' head='" + rid + "' class='repeat rightRounded'>&nbsp;</li>" ).insertAfter( "#newElement" );
+                $( "<li name='wrapper' head='" + rid + "' class='repeat rightRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else
@@ -1161,7 +1161,7 @@ function setRobotVars()
         .fail(function() {
           $( "#robot_connected" ).prop( "checked", false );
           $("#elementName").text("Error");
-          $("#elementHelp").html("<hr size='1' />Cannot connect to the robot! There is no service running at: http://localhost:5001/robot");
+          $("#elementHelp").html("<hr size='1'>Cannot connect to the robot! There is no service running at: http://localhost:5001/robot");
           $("#elementHelp").show();
         });
     }
