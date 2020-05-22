@@ -12,6 +12,10 @@ Cite as: Tudor B. Ionescu (2020). Assembly - An open source, web-based robot pro
 
 You can use Assembly at: https://assembly.comemak.at
 
+## Acknowledgement
+
+This software has received financial support from the Austrian Research Promotion Agency (FFG) under Grant number 871459 (http://www.comemak.at).
+
 ## Introduction
 
 Assembly is an easy to use web-based robot programming environment, which builds on a new visual, block-based programming paradigm. Assembly builds on a simple programming model, which is reminiscent of the blackboard design pattern. The system maintains the context in three JSON objects, called "Params", "Vars" and "Robot", which represent the blackboard of the system. Programs are composed of function blocks, called actors, which can be linked together to form a visual workflow. The visual workflow encompasses program semantics, which can be used to generate code in any programming language. Assembly thus uses the same working principle as Blockly; only that it aims to be easier to use and to extend. 
