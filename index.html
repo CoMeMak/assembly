@@ -1060,7 +1060,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         
     </script>
  
-<div id="trash" style="font-size: 35px;display: absolute; z-index: 101; color: slategrey;">🗑</div> 
+<div id="trash" style="font-size: 35px;display: absolute; z-index: 101; color: slategrey;"><a href="javascript:$('.li-selected').remove();indent();">🗑</a></div> 
 <script>
 indent();
 </script>
@@ -1222,7 +1222,7 @@ function setRobotVars()
 			var sel = "#wp";
 			if($(".li-selected").attr("name") == "moveTo")
 			{
-				sel += ", .li-selected";
+				//sel += ", .li-selected";
 			}
             
 			$(sel).css("background-color","");
