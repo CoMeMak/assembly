@@ -1,6 +1,6 @@
 Hallo, guten Tag! 
 
-Willkommen zur Vorlesung Grundlagen der Montageplanung. Heute werden wir uns dem Thema Robotersoftware und Roboterprogrammierung widmen. 
+Willkommen zur Vorlesung Grundlagen der Montage-Planung. Heute werden wir uns dem Thema Robotersoftware und Roboterprogrammierung widmen. 
 
   
 
