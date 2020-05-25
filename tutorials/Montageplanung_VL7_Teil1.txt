@@ -4,17 +4,17 @@ Willkommen zur Vorlesung Grundlagen der Montage-Planung. Heute werden wir uns de
 
   
 
-Die Lernziele für die heutige Veranstaltung sind wie folgt: 
+Die Lernziele für die heutige Veranstaltung sind wie folgt. 
 
-Ein Grundverständnis für die Struktur und Funktionsweise von Robotersoftware und –Programmierumgebungen entwickeln 
+Ein Grundverständnis für die Struktur und Funktionsweise von Robotersoftware und –Programmierumgebungen entwickeln. 
 
-Einige Programmierumgebungen für kollaborationsfähige Leichtbauroboter kennenlernen 
+Einige Programmierumgebungen für kollaborationsfähige Leichtbauroboter kennenlernen. 
 
-Verschiedene Qualitätsattribute einer Roboterprogrammierumgebung für Endbenutzer verstehen und evaluieren 
+Verschiedene Qualitätsattribute einer Roboterprogrammierumgebung für Endbenutzer verstehen und evaluieren. 
 
-Vor- und Nachteile verschiedener Programmieransätze identifizieren 
+Vor- und Nachteile verschiedener Programmieransätze identifizieren. 
 
-Ein erstes Roboterprogramm erstellen und testen 
+Ein erstes Roboterprogramm erstellen und testen. 
 
  
 
@@ -34,7 +34,7 @@ Roboterprogrammierumgebungen sind meistens proprietäre Softwarewerkzeuge, die a
 
   
 
-Basisarchitektur 
+Basisarchitektur. 
 
 Das Architekturbild zeigt, wie moderne proprietäre Robotersoftware aufgebaut ist. Man redet hier über eine Softwarestapel, die aus mehreren Schichten oder Ebenen besteht. Auf der untersten, so genannten Hardware-Ebene gibt es Basissoftwarekomponenten, die von den Roboterherstellern selbst entwickelt werden. Diese Komponenten implementieren schnelle Regelungsalgorithmen und erfüllen die Funktion eines Software-Treibers. Ein Treiber bietet Softwarefunktionen an, die in Echtzeit ausgeführt werden können. Das heißt, dass Treiberfunktionen eine gewisse Performance-Garantie liefern, auf Basis derer Funktionen aus der Gruppe der Kinematik und Sicherheit implementiert werden können. Während die Treiber meistens in C oder Assembler programmiert sind, wird auf den höheren Schichten der Softwarestapel oft auf Hochsprachen, wie C++, Java oder Python gesetzt. Diese bieten mehrere Möglichkeiten zur Strukturierung der Software, etwa durch ein objektorientiertes Design.  
 
@@ -50,5 +50,3 @@ Die Schichtenarchitektur unterstützt also unterschiedliche Beziehungen zwischen
 Offene Robotersoftware wird oft ähnlich wie proprietäre Software strukturiert, da es auf technischer Ebene ähnliche Beziehungen zwischen den Entwicklern unterschiedlicher Softwarekomponenten existieren. Im Gegensatz zur proprietären Robotersoftware, wird die Entwicklung offener Robotersoftware von oben getrieben, sodass eine Version der Basissoftware und der Anwendersoftware mit mehreren Robotertypen funktioniert. Somit wird vermieden, dass ein Monopol eines einzigen Roboterherstellers oder eine Vendor Lock-in Situation entsteht. Offene Robotersoftware entsteht auch in Softwareökosystemen, im Rahmen derer sowohl unabhängige Entwickler aus der Open Source Community als auch Roboterhersteller aktiv sind. Ein gutes Beispiel für ein offenes Softwareökosystem ist das “Robot Operating System” (ROS).  
 
 Über die Vor- und Nachteile von proprietärer und offener Robotersoftware werden wir später etwas ausführlicher reden. 
-
- 
