@@ -1,0 +1,54 @@
+Hallo, guten Tag! 
+
+Willkommen zur Vorlesung Grundlagen der Montageplanung. Heute werden wir uns dem Thema Robotersoftware und Roboterprogrammierung widmen. 
+
+  
+
+Die Lernziele für die heutige Veranstaltung sind wie folgt: 
+
+Ein Grundverständnis für die Struktur und Funktionsweise von Robotersoftware und –Programmierumgebungen entwickeln 
+
+Einige Programmierumgebungen für kollaborationsfähige Leichtbauroboter kennenlernen 
+
+Verschiedene Qualitätsattribute einer Roboterprogrammierumgebung für Endbenutzer verstehen und evaluieren 
+
+Vor- und Nachteile verschiedener Programmieransätze identifizieren 
+
+Ein erstes Roboterprogramm erstellen und testen 
+
+ 
+
+Was ist Roboterprogrammierung? 
+
+Roboterprogrammierung ist der Vorgang, durch welchen Befehle an einen Roboter in einem Computerlesbaren Format verfasst werden. Roboterbefehle werden als Basis-Softwarefunktionen implementiert und auf verschiedenen Ebenen dem Programmierer zur Verfügung gestellt. Normalerweise unterscheidet man zwischen der Steuerungsebene und Applikationsebene.  
+
+Auf der Steuerungsebene bilden Kinematik und Sicherheit eine erste Gruppe von Roboterfunktionen. Diese sind Softwarefunktionen, die die Steuerung und Regelung der Basiskomponenten eines Roboters, etwa Sensoren und Aktuatoren ermöglichen. Kinematik-Funktionen dienen dazu, den Roboter zu Bewegen. Auch die Pfadplanung gehört zur Kategorie der Kinematik. Es geht dabei um die Berechnung von Wegpunkten, die einen Roboter durchgehen muss, um ein bestimmtes räumliches Ziel zu erreichen. Die Messung von Kräften und Momenten dient dazu, die Mensch-Roboter Interaktion sicher zu machen sowie die Bewegungen mit ausreichender Genauigkeit auszuführen. Die Funktionen aus dieser Gruppe sind Roboterspezifisch. 
+
+Ebenfalls auf der Steuerungsebene gibt es Funktionen für die Manipulation von Endeffektoren, wie Greifer, Bohrer oder Schrauber. Die Funktionen aus dieser Gruppe werden ähnlich wie diejenigen aus der Kinematik und Sicherheit implementiert. Dafür verwendet man eine Programmiersprache wie C++ oder Assembler. Die Funktionen aus dieser Gruppe sind Werkzeugspezifisch. 
+
+Eine dritte Funktionsgruppe bilden kontextspezifische Anwendungen. Diese können beispielsweise Montage-Handhabungsfunktionen unterstützen. Im Vergleicht zu den anderen Funktionsgruppen, sind Anwendungen nutzerorientiert. 
+
+Eine Roboterprogrammierumgebung stellt Experten und Endbenutzern Programmierschnittstellen zur Verfügung, die es erlauben, die Funktionen aus allen drei Gruppen zu verwenden. Ein Roboterprogramm besteht somit aus einer zusammenhängenden Reihe von Befehlen, welche einer bestimmten Roboterfunktion aus den drei genannten Gruppen entsprechen. Während Robotik-Experten Funktionen aus allen Gruppen verwenden, sind Endbenutzer meistens an Anwendungsorientierten Programmierschnittstellen interessiert.  
+
+Roboterprogrammierumgebungen sind meistens proprietäre Softwarewerkzeuge, die auf proprietären Programmiersprachen aufbauen. Es gibt aber auch viele offene Programmierumgebungen, die auf gängige Programmiersprachen wie C++, Python oder Java aufbauen. Mehr dazu später. 
+
+  
+
+Basisarchitektur 
+
+Das Architekturbild zeigt, wie moderne proprietäre Robotersoftware aufgebaut ist. Man redet hier über eine Softwarestapel, die aus mehreren Schichten oder Ebenen besteht. Auf der untersten, so genannten Hardware-Ebene gibt es Basissoftwarekomponenten, die von den Roboterherstellern selbst entwickelt werden. Diese Komponenten implementieren schnelle Regelungsalgorithmen und erfüllen die Funktion eines Software-Treibers. Ein Treiber bietet Softwarefunktionen an, die in Echtzeit ausgeführt werden können. Das heißt, dass Treiberfunktionen eine gewisse Performance-Garantie liefern, auf Basis derer Funktionen aus der Gruppe der Kinematik und Sicherheit implementiert werden können. Während die Treiber meistens in C oder Assembler programmiert sind, wird auf den höheren Schichten der Softwarestapel oft auf Hochsprachen, wie C++, Java oder Python gesetzt. Diese bieten mehrere Möglichkeiten zur Strukturierung der Software, etwa durch ein objektorientiertes Design.  
+
+Endeffektoren verwenden eigene Treiber, die allerdings meistens an der Schnittstelle zu den Kinematik- und Sicherheitsfunktionen ansetzen, da sie oft von Drittanbietern entwickelt werden, die keinen Zugang zum Quellcode der Robotertreibersoftware haben oder brauchen. Viele Roboterhersteller bieten selber Endeffektoren. Der Vorteil dabei ist, dass die Treibersoftware der Endeffektoren mit der des Roboters gut abgestimmt sind und somit weniger Interoperabilitätsprobleme verursachen können. Allerdings gibt es viele spezialisierte Endeffektoren-Hersteller, die leistungsfähigere Produkte anbieten als die Roboterhersteller selbst.  
+
+Die oberste Ebene ist die der Endbenutzerfunktionen. Diese werden auch als Anwendersoftware, Roboter-Skills oder Roboter-Apps bezeichnet. Programmierumgebungen für Endbenutzer zählen auch zur Kategorie der Anwendersoftware. Im Falle proprietärer Systeme, stehen die Entwickler von Anwendersoftware in einer formellen Beziehung zu den Roboterherstellern. Somit kommen sogenannte Software-Ökosysteme zustande, die aus einer Konstellation von Softwareanbietern und –Anwendern bestehen, die von den Roboterherstellern weitgehend kontrolliert werden. Die Letzteren überprüfen jede Anwendungssoftware (das heißt, Roboter-Skill oder App), bevor diese verkauft oder manchmal auch kostenlos zur Verfügung gestellt wird. Das Prinzip ist ähnlich wie im Falle der Smart Phone App Stores. Die Robotik sowie viele andere Bereiche der Automatisierung versucht das Geschäftsmodell der Großen IT-Konzerne zu implementieren; mit mehr oder weniger Erfolg.  
+
+Zwei Beispiele für Roboter-Softwareökosysteme sind UR+, betrieben von dem Hersteller “Universal Robots”, und FrankaWorld, betrieben von der Firma Franka Emika. Dort kann man als Privatperson Softwarekomponenten für UR-Roboter, beziehungsweise für den Franka Emika Panda-Roboter kaufen aber nicht verkaufen. 
+
+Die Schichtenarchitektur unterstützt also unterschiedliche Beziehungen zwischen den Herstellern von Robotern, Endeffektoren und Applikationssoftware im Rahmen eines komplexen Marktes, auf dem Roboteranbieter es versuchen, die bestehende Kundschaft möglichst festzubinden.  
+
+ 
+Offene Robotersoftware wird oft ähnlich wie proprietäre Software strukturiert, da es auf technischer Ebene ähnliche Beziehungen zwischen den Entwickler unterschiedlicher Softwarekomponenten existieren. Im Kontrast zur proprietären Robotersoftware, wird die Entwicklung offener Robotersoftware von oben getrieben, sodass eine Version der Basissoftware und der Anwendersoftware mit mehreren Robotertypen funktioniert. Somit wird vermieden, dass ein Monopol eines einzigen Roboterherstellers oder eine Vendor Lock-in Situation entsteht. Offene Robotersoftware entsteht auch in Softwareökosystemen, im Rahmen derer sowohl unabhängige Entwickler aus der Open Source Community als auch Roboterhersteller aktiv sind. Ein gutes Beispiel für ein offenes Softwareökosystem ist das “Robot Operating System” (ROS).  
+
+Über die Vor- und Nachteile von proprietärer und offener Robotersoftware werden wir später etwas ausführlicher reden. 
+
+ 
