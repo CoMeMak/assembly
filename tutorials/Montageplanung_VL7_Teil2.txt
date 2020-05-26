@@ -16,5 +16,4 @@ Welche sind die Vor- und Nachteile von proprietären Roboter-Programmierumgebung
 
 Einige Nachteile proprietärer Programmierumgebungen ergeben sich aus der Tatsachte, dass ein Vendor Lock-In wahrscheinlicher wird und das die Interoperabilität der Software mit anderen Software-Bibliotheken wird von Herstellern kontrolliert wird. Die Möglichkeiten zur Vernetzung mit anderen Systemen sind meistens nur über HW-Protokolle wie OPC UA oder MODBUS möglich, was höhere Entwicklungskosten verursachen kann. Die von den Herstellern angebotenen Schulungen sind nicht immer günstig. Und um Kundschaft für Schulungen zu gewinnen, verbreiten die Anbieter nur spärlich Dokumentation im Internet.
 
-
- 
+Offene Roboter-Programmierumgebungen überwinden einige der Nachteile der proprietären Programmierumgebungen. Allerdings gibt es derzeit wenige offene, kostenlose Programmierumgebungen für Endbenutzer. Offene Programmierumgebungen werden durch die Open Source Community erweitert und gewartet. Dabei ist der Quellcode offen und kostenlos, sodass man als Entwickler die volle Kontrolle über alel Funktionen hat. Leider sind offene Roboter-Programmierumgebungen, wie ROS, oft benutzerunfreundlich und erfordern fortgeschrittenen Programmierkenntnisse. Zusätzlich gibt es keinen Kundensupport und die Kompatibilität mit verschiedenen Robotertypen und Endeffektoren lässt auch zu wünschen. 
