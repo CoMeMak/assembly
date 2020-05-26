@@ -1,0 +1,1 @@
+Die Basisstruktur eines Roboterprogramms kann meistens als sequenzieller Ablauf von Roboterfunktionen dargestellt werden. Einen solchen Ablauf bezeichnet man auch als Workflow. 
