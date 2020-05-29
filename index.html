@@ -793,10 +793,9 @@ function startExecution()
 }
 </script>
 
-<ul id="workflow" style="user-select: none;padding-top: 10px; padding-left: 10px;" class="sortable">
+<ul id="workflow" style="user-select: none; padding-left: 10px;" class="sortable">
   <li name="start" onclick="startExecution()" class="fixed rightRounded" style="background-color: black; color: white;">
   start&nbsp;&nbsp;<font color="DarkSeaGreen">▶</font>
-  
   </li>
   <li name="stop" class="leftRounded" style="background-color: black; color: white; display: table-cell; vertical-align: middle;">stop&nbsp;&nbsp;<font color="LightCoral">◼</font></li>
 </ul>
@@ -906,13 +905,12 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
   <li name="break" class="draggable break leftRounded">break</li>
 </ul>
 <ul id="settings">
-  <li name="setParams" title="Sets the robot parameters to their current value in the Parameters tab." class="draggable settings rightRounded" style="padding-right: 7px; padding-top: 8px; padding-bottom: 6px; background-color: beige;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-left: 2px;"><img name="setParams" src="img/params.png" height="13"></td><td valign="top" name="setParams">&nbsp;set</td></tr></table></li>
+  <li name="setParams" title="Sets the robot parameters to their current value in the Parameters tab." class="draggable settings rightRounded" style="padding-right: 7px; padding-top: 8px; padding-bottom: 6px; background-color: white;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-left: 2px;"><img name="setParams" src="img/params.png" height="13"></td><td valign="top" name="setParams">&nbsp;set</td></tr></table></li>
   <li name="setVars" title="Sets the contents of the Vars object as currently defined in the Variables tab." class="draggable settings rightRounded" style=" background-color: floralwhite;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img name="setVars" src="img/vars.png" height="14"></td><td valign="top" name="setVars">&nbsp;set</td></tr></table></li>  
   <!--
   <li name="export" title="Sets the content of the indicated variable to that of the corresponding variable in the global scope (window.Vars)." class="draggable settings rightRounded" style="padding-right: 1px;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td><img src="img/vars.png" height="15"></td><td>&nbsp;export<select class="export-var object"></select></td></tr></table></li>  
   -->
   <li name="eval" title="Evaluates the expression indicated in the drop-down list." class="draggable settings rightRounded" style="padding-right: 1px;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td name="eval">⌨</td><td valign="top" name="eval">&nbsp;eval<select name="eval-select" class="eval expression"></select></td></tr></table></li>  
-  
   
 </ul>
 <ul id="tasks">
