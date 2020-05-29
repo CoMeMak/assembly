@@ -312,6 +312,8 @@
         width: 50px;
         font-family: 'Big Shoulders Text', Arial Narrow;
         border-radius: 5px;
+        border-color: lightgrey;
+        border-width: 2px;
         
     }
     
@@ -323,5 +325,5 @@
         color: black;
     }
     
-	
+
 	
