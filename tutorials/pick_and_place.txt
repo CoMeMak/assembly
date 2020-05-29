@@ -1,1 +1,12 @@
 
+Hi and welcome to this Assembly tutorial!
+
+Today we are going to create a simple pick and place application using the simulator.
+
+Assembly is a web based robot programming environment, which is free to use. You can do so either from this website or download the source code from Github.
+
+Assembly is a graphic, block-based programming environment. This means that the program structures, like statements, loops, or conditional structures can be dragged and dropped from the actor library to the workflow area. The workflow area is where the actual program is assembled block by block. Hence the name of this tool.
+
+Blocks are also called actors because the trigger different robot actions. Assembly programs or workflows are written and read left to right. Unlike in textual programming languages, there is no explicit indentation but only a linear enchaining of actors. A program in Assembly is similar to a spoken phrase, which, when properly formulated, achieves the desired effect. In this phrase, each actor may be regarded as a short sentence. At the same time, actors emcompass the semantics necessary to generate code in a textual programming language (currently JavaScript), in which a series of library functions are provided. Each actor thus generates textual program code, which calls different robot functions and uses the features of the JavaScript programming language. 
+
+So let us now program a simple pick and place application. To that end, we need to define two locations -- the pick and place locations, where a hypothetical object is to be picked and placed. 
