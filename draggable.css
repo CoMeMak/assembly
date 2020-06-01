@@ -35,15 +35,10 @@
 		border-color: lightgrey;
         border-style: outset;	
         border-width: 2px;
-        border-radius: 3px;
-    }
-
-	#RobotContext.clicked, #ParamsContext.clicked, #VarsContext.clicked {
-		border-color: lightgrey;
-        border-style: inset;	
-        border-width: 2px;
         border-radius: 5px;
     }
+
+
     
     ul#workflow, ul#tasks, ul#actors, ul#controls, ul#settings {
       list-style-type: none; margin: 2px; padding: 2px; overflow: hidden; white-space:nowrap;       
@@ -62,8 +57,10 @@
     .activeTask 
     {
         font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
-          margin: 15px; margin-bottom: 10px; padding: 8px; border-width: 1px; border-style: solid; background-color: white;
-          border-color: black;
+          margin-left: 15px; margin-top: 14px; margin-bottom: 10px; padding: 8px; background-color: white;
+          border-color: lightgrey;
+        border-style: outset;	
+        border-width: 2px;
           text-align: left;
           vertical-align: top;
           background-color: khaki;
@@ -284,9 +281,10 @@
     .clicked
     {
         background-color: black;
-        border-color: black;
-        border-radius: 3px;
         color: white;
+      	border-style: inset;	
+        border-width: 2px;
+        
     }
     
     .simulator
