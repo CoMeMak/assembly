@@ -41,7 +41,7 @@
       float: left; margin: 2px; padding: 5px; border-width: 1px; border-style: solid; 
       cursor: pointer;      
       height: 22px;
-      border-color: black;      
+      border-color: black;
       padding-top: 9px;
     }
     
@@ -239,11 +239,13 @@
 	.li-selected {
 		border-color: DarkSeaGreen !important;
 		border-width: 2px !important;
+        border-style: outset !important;
 		margin-top: 1px !important;
 	}
 	.li-executing {
 		border-color: Brown !important;
 		border-width: 2px !important;
+        border-style: outset !important;
 		margin-top: 1px !important;
 	}
 	
