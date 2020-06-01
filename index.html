@@ -294,7 +294,8 @@
 				if(!ui_item.hasClass("li-selected"))
 				{
 					$("li").removeClass("li-selected");
-					ui_item.addClass("li-selected")
+					ui_item.addClass("li-selected");
+                    $("li[head='" + ui_item.attr("id") + "']").addClass("li-selected");
 				}
 				else
 				{
@@ -322,8 +323,9 @@
       update: function(event, ui) {
         var lis = $('ul.sortable li');
         
-        if($(lis[lis.length - 1]).attr("name") != "stop" && $(lis[lis.length - 1]).attr("name") != "start")
+        if($(lis[lis.length - 1]).attr("name") != "wrapper" && $(lis[lis.length - 1]).attr("name") != "stop" && $(lis[lis.length - 1]).attr("name") != "start")
         {
+            $("li[head='" + $(lis[lis.length - 1]).attr("id") + "']").remove();
             $(lis[lis.length - 1]).remove();            
         }
         
@@ -395,7 +397,7 @@
             {
                 newelement.removeAttr("id");
             }
-
+			
             rotate = true;
             $("#elementHelp").hide();
           }
@@ -694,7 +696,7 @@ const JavaScriptCodeGenerator =
     },
     "elseif": function(step)
     {
-        return "else if(eval(" + step.find("select").val() + ")){";
+        return "} else if(eval(" + step.find("select").val() + ")){";
     },
     "else": function(step)
     {
@@ -778,9 +780,16 @@ function startExecution()
         else
         {
 			console.log(step.attr("name"));
-			if(step.attr("name") != "wrapper" && step.attr("name") != "if" && step.attr("name") != "while") code += "$('#" + step.attr("id") + "').addClass('li-executing');";
+            var exclude = ["elseif", "if", "else", "wrapper", "while", "repeat"];
+			if(!exclude.includes(step.attr("name"))) 
+            {
+              code += "$('#" + step.attr("id") + "').addClass('li-executing');";
+            }
             code += generator[step.attr("name")](step);
-			if(step.attr("name") != "wrapper" && step.attr("name") != "if" && step.attr("name") != "while") code += "$('#" + step.attr("id") + "').removeClass('li-executing');";
+			if(!exclude.includes(step.attr("name"))) 
+            {	
+          		code += "$('#" + step.attr("id") + "').removeClass('li-executing');";
+            }
         }
 		step_count++;
     }
@@ -793,7 +802,7 @@ function startExecution()
 }
 </script>
 
-<ul id="workflow" style="user-select: none; padding-left: 10px;" class="sortable">
+<ul id="workflow" style="user-select: none; padding-left: 10px; padding-top: 5px;" class="sortable">
   <li name="start" onclick="startExecution()" class="fixed rightRounded" style="background-color: black; color: white;">
   start&nbsp;&nbsp;<font color="DarkSeaGreen">▶</font>
   </li>
