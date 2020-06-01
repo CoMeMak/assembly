@@ -804,10 +804,10 @@ function startExecution()
 </script>
 
 <ul id="workflow" style="user-select: none; padding-left: 10px; padding-top: 10px;" class="sortable">
-  <li name="start" onclick="startExecution()" class="fixed rightRounded" style="background-color: black; color: white;">
+  <li name="start" onclick="startExecution()" class="fixed rightRounded" style="background-color: black; border-color: black; border-style: solid; color: white;">
   start&nbsp;&nbsp;<font color="DarkSeaGreen">▶</font>
   </li>
-  <li name="stop" class="leftRounded" style="background-color: black; color: white; display: table-cell; vertical-align: middle;">stop&nbsp;&nbsp;<font color="LightCoral">◼</font></li>
+  <li name="stop" class="leftRounded" style="background-color: black; color: white; display: table-cell; vertical-align: middle; border-color: black; border-style: solid;">stop&nbsp;&nbsp;<font color="LightCoral">◼</font></li>
 </ul>
 <script>
 $('#activeTask').on('DOMSubtreeModified',function(){
@@ -848,7 +848,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 </tr>
 <tr>
 
-<td align="left" style="user-select: none; padding-top: 5px;padding-bottom: 0px;padding-left:6px; width: 300px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td>&nbsp;&nbsp;</td><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td></tr></table></div><hr style="margin-top: 8px;">
+<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:6px; width: 300px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td>&nbsp;&nbsp;</td><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td></tr></table></div><hr style="margin-top: 7px;">
 <div id="jsoneditor" style="width: 100%; height: 280px;"></div>
 </td>
 <script>
@@ -1067,7 +1067,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         
     </script>
  
-<div id="trash" style="font-size: 35px;display: absolute; z-index: 101; color: slategrey;"><a href="javascript:$('.li-selected').remove();indent();">🗑</a></div> 
+<div id="trash" style="font-size: 36px;display: absolute; z-index: 101; color: slategrey;"><a href="javascript:$('.li-selected').remove();indent();">🗑</a></div> 
 <script>
 indent();
 </script>
