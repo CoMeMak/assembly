@@ -114,11 +114,11 @@
     }
     
     .repeat {
-        background-color: PapayaWhip;
+        background-color: MOCCASIN;
     }
     
     .break {
-        background-image: linear-gradient(to right, aliceblue , PapayaWhip);
+        background-image: linear-gradient(to right, aliceblue , MOCCASIN);
     }
     
     .while-cond {
@@ -134,7 +134,7 @@
     }
 
     .repeat-cond {
-        background-color: PapayaWhip;
+        background-color: MOCCASIN;
         padding: 0;
         margin: 0;
         border: 0;
