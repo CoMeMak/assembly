@@ -97,6 +97,8 @@ When pressing the play button in Assembly, the current task is sent to the robot
 
 ## Architecture
 
+![alt text](https://github.com/architecture.png "Assembly Architecture")
+
 ## Exit Strategy
 
 ...
