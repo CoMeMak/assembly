@@ -97,6 +97,8 @@ When pressing the play button in Assembly, the current task is sent to the robot
 
 ## Architecture
 
+The figure below illustrates the high-level architecture of Assembly. 
+
 ![alt text](https://github.com/CoMeMak/assembly/raw/master/architecture.png "Assembly Architecture")
 
 ## Exit Strategy
