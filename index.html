@@ -266,6 +266,15 @@
         {
             ui_item.click(function() {
                 $("#ParamsContext").click();
+              	if(!ui_item.hasClass("li-selected"))
+				{
+                 	$("#x").val(parseFloat($("#x").val()) + Params.motion.dP.x);
+                  	$("#y").val(parseFloat($("#y").val()) + Params.motion.dP.y);
+                  	$("#z").val(parseFloat($("#z").val()) + Params.motion.dP.z);
+                  	$("#rx").val(parseFloat($("#rx").val()) + Params.motion.dR.rx);
+                  	$("#ry").val(parseFloat($("#ry").val()) + Params.motion.dR.ry);
+                  	$("#rz").val(parseFloat($("#rz").val()) + Params.motion.dR.rz);
+                }
             });
             $("#ParamsContext").click();
         }        
@@ -835,6 +844,7 @@ function toggleHelp()
 	}
 }
 </script>
+
 <div id="help" class="helpBox" style="user-select: none; width: 450px;color: grey;font-size: 12px;padding: 22px;font-family: 'Big Shoulders Text', Arial Narrow; font-size: 14px;font-family: Arial Narrow;padding-bottom: 15px;">
 <font color="steelblue" size="3">🛈</font>&nbsp;&nbsp;<b><a href="#"><span id="elementName" onclick="toggleHelp();" title="Show help">Help</span></a></b>
 <span id="elementHelp" style="display: none;" onclick="toggleHelp();">
@@ -843,7 +853,7 @@ Drag and drop elements from the <b>Actor and Task Library</b> 🡖 to the workfl
 <br><br>
 To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its name. Then hover over the floppy disk icon 💾 and drag the task bookmark to your browser's bookmarks bar. To load the task, just click on that browser bookmark. Tasks can also be used within other tasks. When loading a task, it will be also added to the <b>Actor and Task Library</b> 🡖
 </span>
-</div>
+  </div>
 </td>
 </tr>
 <tr>
@@ -1067,7 +1077,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         
     </script>
  
-<div id="trash" style="font-size: 36px;display: absolute; z-index: 101; color: slategrey;"><a href="javascript:$('.li-selected').remove();indent();">🗑</a></div> 
+<div id="trash" style="padding-left: 5px; padding-top: 2px; font-size: 36px;display: absolute; z-index: 101; color: slategrey;"><a href="javascript:$('.li-selected').remove();indent();" title="Drag actors here to delete them from the workflow.">🗑</a></div> 
 <script>
 indent();
 </script>
