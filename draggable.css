@@ -60,7 +60,7 @@
           margin-left: 15px; margin-top: 14px; margin-bottom: 10px; padding: 8px; background-color: white;
           border-color: lightgrey;
         border-style: outset;	
-        border-width: 2px;
+        border-width: 1.5px 1.9px 1.9px 1.5px;
           text-align: left;
           vertical-align: top;
           background-color: khaki;
@@ -323,9 +323,9 @@
         background-color: rgba(255, 255, 255,0.5);
         width: 50px;
         font-family: 'Big Shoulders Text', Arial Narrow;
-        border-radius: 5px;
+        border-radius: 4px;
         border-color: lightgrey;
-        border-width: 2px;
+        border-width: 1.9px;
         
     }
     
