@@ -182,7 +182,7 @@
     function indent()
     {
 		
-        var lis = $('ul.sortable li');
+        /*var lis = $('ul.sortable li');
         var keys = [];
         var margin = 2;
         var stop = null;
@@ -218,8 +218,10 @@
                 }
             }           
         }       
-        
-        $("#trash").css({top: stop.top - 6, left: stop.left + 60, position:'absolute'});
+        */
+      
+        var stop = $("li[name='stop']").offset();  
+      $("#trash").css({top: stop.top - 6, left: stop.left + 60, position:'absolute'});
     }
   
   function showHelp(ui_item)
@@ -363,7 +365,11 @@
           revert: "invalid",
           
           drag: function( event, ui ) { 
-            $(".sortable li").css("margin-right","10px");
+            var lis = $('ul.sortable li');
+            if(lis.length < 5)
+            {
+              $(".sortable li").css("margin-right","10px");
+            }
             indent();
             
           },
