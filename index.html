@@ -306,6 +306,7 @@
 					$("li").removeClass("li-selected");
 					ui_item.addClass("li-selected");
                     $("li[head='" + ui_item.attr("id") + "']").addClass("li-selected");
+                    $("li[id='" + ui_item.attr("head") + "']").addClass("li-selected");
 				}
 				else
 				{
@@ -408,6 +409,7 @@
                 newelement.removeAttr("id");
             }
 			
+            addClickEvents($("li[head='"+rid+"']"));
             rotate = true;
             $("#elementHelp").hide();
           }
