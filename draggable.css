@@ -34,7 +34,7 @@
     #RobotContext, #ParamsContext, #VarsContext {
 		border-color: lightgrey;
         border-style: outset;	
-        border-width: 2px;
+        border-width: 1.5px 1.9px 1.9px 1.5px;
         border-radius: 5px;
     }
 
@@ -46,7 +46,7 @@
 
     li.rightRounded, li.rounded, li.leftRounded {
       font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
-      float: left; margin: 2px; padding: 5px; border-width: 2px;
+      float: left; margin: 2px; padding: 5px; border-width: 1.5px 1.9px 1.9px 1.5px;
       cursor: pointer;      
       height: 22px;
       border-color: lightgrey;
@@ -249,12 +249,12 @@
 	
 	.li-selected {
 		border-color: DarkSeaGreen !important;
-		border-width: 2px !important;
+		border-width: border-width: 1.5px 1.9px 1.9px 1.5px !important;
         border-style: inset !important;		
 	}
 	.li-executing {
 		border-color: Brown !important;
-		border-width: 2px !important;
+		border-width: border-width: 1.5px 1.9px 1.9px 1.5px !important;
         border-style: inset !important;		
 	}
 	
@@ -283,7 +283,7 @@
         background-color: black;
         color: white;
       	border-style: inset;	
-        border-width: 2px;
+        border-width: 1.5px 1.9px 1.9px 1.5px;
         
     }
     
