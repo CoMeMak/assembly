@@ -497,7 +497,7 @@ function generateBookmarklet()
 <!-- WORKFLOW -->
 <td class="workflow" colspan="2" valign="top" style="user-select: none;">
 <span class="activeTask" title="Edit task name"><span>✎</span>&nbsp;&nbsp;&nbsp;<span style="font-weight: normal; border-right-width: 1px;" id="activeTask" onclick="$('#activeTask').attr('contenteditable','true');" onfocusout="$('#activeTask').attr('contenteditable','false');">Untitled</span>&nbsp;&nbsp;&nbsp;</span>
-<span title="Drag and drop this link to your browser's bookmarks bar to save this task." class="saveButton" onmouseout="$('#bookmarklet').css('color', 'white');rotate = true;" onmouseover="rotate = false;$('#bookmarklet').css('color', 'grey');">💾 <a id="bookmarklet" href="#" style="color:white;">Untitled</a></span>
+<span title="Drag and drop this link to your browser's bookmarks bar to save this task." class="saveButton" onmouseout="$('#bookmarklet').css('color', 'white');rotate = true;" onmouseover="generateBookmarklet(); rotate = false;$('#bookmarklet').css('color', 'grey');">💾 <a id="bookmarklet" href="#" style="color:white;">Untitled</a></span>
 
 <script>
 
@@ -1156,10 +1156,7 @@ var MOVING = false;
 function setRobotVars()
 {
     $(".dg .main").hide();
-    if(frame % 5 == 0)
-    {
-        generateBookmarklet()
-    }
+    
     frame++;
     
     if($("#robot_connected").is(":checked"))
