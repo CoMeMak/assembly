@@ -252,24 +252,28 @@
         if(ui_item.attr("name") == "moveTo")
         {
              ui_item.click(function() {
-				var params = JSON.parse(ui_item.attr("params"));
-				$("#robot_connected").prop("checked", false);
-                $("#x").val(params.tcp.x);
-                $("#y").val(params.tcp.y);
-                $("#z").val(params.tcp.z);
-                $("#rx").val(params.tcp.rx);
-                $("#ry").val(params.tcp.ry);
-                $("#rz").val(params.tcp.rz);
-                $("#ParamsContext").click();
+				if(!ui_item.hasClass("li-selected"))
+				{
+                 var params = JSON.parse(ui_item.attr("params"));
+                  $("#robot_connected").prop("checked", false);
+                  $("#x").val(params.tcp.x);
+                  $("#y").val(params.tcp.y);
+                  $("#z").val(params.tcp.z);
+                  $("#rx").val(params.tcp.rx);
+                  $("#ry").val(params.tcp.ry);
+                  $("#rz").val(params.tcp.rz);
+                  $("#ParamsContext").click();
+                }
              });
              $("#ParamsContext").click();
         }
         else if(ui_item.attr("name") == "moveRelative")
         {
             ui_item.click(function() {
-                $("#ParamsContext").click();
+                
               	if(!ui_item.hasClass("li-selected"))
 				{
+                    $("#ParamsContext").click();
                  	$("#x").val(parseFloat($("#x").val()) + Params.motion.dP.x);
                   	$("#y").val(parseFloat($("#y").val()) + Params.motion.dP.y);
                   	$("#z").val(parseFloat($("#z").val()) + Params.motion.dP.z);
@@ -309,10 +313,23 @@
 					ui_item.addClass("li-selected");
                     $("li[head='" + ui_item.attr("id") + "']").addClass("li-selected");
                     $("li[id='" + ui_item.attr("head") + "']").addClass("li-selected");
+                    var controls = $("li.li-selected");
+                    if(controls.length > 1)
+                    {
+                    	var start_elem = controls[0];
+                        var end_elem = controls[1];
+                        var elem = $(start_elem).next();
+                        while(elem.attr("head") != $(start_elem).attr("id")) 
+                        {
+                        	elem.addClass("li-selected");
+                            elem = $(elem).next();
+                        } 
+                    }
 				}
 				else
 				{
 					$("li").removeClass("li-selected");
+                    
                     $("#elementHelp").hide();
 				}
 			},50);						
