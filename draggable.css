@@ -253,7 +253,7 @@
     }
 	
 	.li-selected {
-		border-color: DarkSeaGreen !important;
+		
 		border-width: border-width: 1.5px 1.9px 1.9px 1.5px !important;
         border-style: inset !important;        
 	}
