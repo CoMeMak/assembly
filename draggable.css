@@ -253,14 +253,16 @@
     }
 	
 	.li-selected {
-		border-color: DarkSeaGreen !important;
+		
 		border-width: border-width: 1.5px 1.9px 1.9px 1.5px !important;
-        	border-style: inset !important;        
+        border-style: inset !important;     
+        box-shadow: 0px 0px 5px 5px whitesmoke;
 	}
 	.li-executing {
-		border-color: Brown !important;
+		border-color: darkseagreen !important;
 		border-width: border-width: 1.5px 1.9px 1.9px 1.5px !important;
         border-style: inset !important;		
+        box-shadow: 0px 0px 5px 5px aliceblue;
 	}
 	
     
