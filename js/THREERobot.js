@@ -37,6 +37,50 @@ const THREERobot = function (V_initial, limits, scene) {
     0x0,
   ]
   */
+	var sceneObjects = [];
+	function createObjects()
+	{
+		
+		var mat = new THREE.MeshBasicMaterial({color: 0x73B0F5});
+		var geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01);
+		var cube = new THREE.Mesh(geometry, mat);
+		cube.position.set(3,3,-1.6);
+		
+		geometry = new THREE.BoxGeometry(1, 1, 1);
+		var cube2 = new THREE.Mesh(geometry, mat);
+		
+		cube2.position.set(0,0,1.3);
+		cube.add( cube2 );		
+		
+		scene.add(cube);
+		sceneObjects.push({o:cube,d:2.7});
+	}
+	
+	function moveObjects()
+	{
+		for(var i=0;i<sceneObjects.length;i++)
+		{
+			var obj = sceneObjects[i];
+			
+			var cond = (obj.o.position.x == Robot.tcp.x / 100 && obj.o.position.y == Robot.tcp.y / 100 && (Robot.tcp.z / 100) - obj.o.position.z < obj.d);
+			
+			if(ATTACH && cond)
+			{
+				
+				obj.o.position.set(Robot.tcp.x / 100,Robot.tcp.y / 100,Robot.tcp.z / 100);
+				
+				obj.o.rotation.set(Robot.tcp.rx * dtr,Robot.tcp.ry * dtr,Robot.tcp.rz * dtr);
+				
+				var dtr = 0.0174533;
+				
+			}
+			else
+			{
+				obj.rotation.set(0,0,0);
+				obj.position.setZ(-1.6);	
+			}
+		}			
+	}
 
   function createCube(x, y, z, w, h, d, min, max, jointNumber) {
     
@@ -81,6 +125,13 @@ const THREERobot = function (V_initial, limits, scene) {
 	  
 	  cube.position.set(-7,5,7)
 	  scene.add(cube);
+	  
+	  
+	  createObjects();
+	  setInterval(moveObjects,100);
+
+	
+	
 
     console.log(min, max)
     // min = min / 180 * Math.PI
