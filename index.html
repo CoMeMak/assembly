@@ -250,7 +250,25 @@
   function addClickEvents(ui_item)
   {
     	ui_item.off("click");
-        if(ui_item.attr("name") == "moveTo")
+		if(ui_item.attr("name") == "gripperClose")
+        {
+			ui_item.click(function() {
+				if(!ui_item.hasClass("li-selected"))
+				{
+					ATTACH = true;
+				}
+			});
+		}
+		else if(ui_item.attr("name") == "gripperOpen")
+        {
+			ui_item.click(function() {
+				if(!ui_item.hasClass("li-selected"))
+				{
+					ATTACH = false;
+				}
+			});
+		}
+        else if(ui_item.attr("name") == "moveTo")
         {
              ui_item.click(function() {
 				if(!ui_item.hasClass("li-selected"))
@@ -1269,10 +1287,7 @@ function setRobotVars()
         {
             var snapshot = document.getElementsByTagName("canvas")[0].toDataURL("image\png",0.1);  
 			var sel = "#wp";
-			if($(".li-selected").attr("name") == "moveTo")
-			{
-				//sel += ", .li-selected";
-			}
+			
             
 			$(sel).css("background-color","");
             $(sel).css("background-repeat", "no-repeat");
