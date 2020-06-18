@@ -344,6 +344,11 @@
                             elem = $(elem).next();
                         } 
                     }
+					/*
+					else
+					{
+						setTimeout(function(){$("li").removeClass("li-selected");},300);
+					}*/
 				}
 				else
 				{
@@ -667,7 +672,7 @@ function driveTo(Params,Vars,target)
   });
 }
 
-async function relativeMove()
+async function relativeMove(Params,Vars)
 {
 	var target = { tcp: {
             x: parseFloat(Robot.tcp.x) + parseFloat(Params.motion.dP.x),
@@ -771,12 +776,12 @@ const JavaScriptCodeGenerator =
     },
     "setParams": function(step)
     {
-		return "Params = " + atob(step.attr("params")) + "; userInput(Params); $('#ParamsContext').click();"; // TODO: set jsoneditor params here too
+		return "Params = " + atob(step.attr("params")) + "; userInput(Params);"; // TODO: set jsoneditor params here too
     },
     "setVars": function(step)
     {
 		var code = "var v = " + atob(step.attr("params")) + ";";
-        code += "Vars = {...Vars, ...v}; userInput(Vars); $('#VarsContext').click(); ";
+        code += "Vars = {...Vars, ...v}; userInput(Vars); ";
 		return code;
         //return "Vars = " + step.attr("params") + ";";
     },
@@ -795,7 +800,7 @@ const JavaScriptCodeGenerator =
     },
 	"funcEnd": function(step)
     {
-        return "}; await " + step.attr("funcName") + "(Params,Vars);" + "$('#" + step.attr("taskId") + "').removeClass('li-executing');";
+        return "}; await " + step.attr("funcName") + "(Params,Vars);" + "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
     }
 }
 
@@ -817,7 +822,7 @@ function startExecution()
     {
         var step = $(steps[i]);
 		
-		step.attr("id", "step_" + step_count);
+		step.attr("step", "step_" + step_count);
 		if(step.hasClass("task"))
         {
             if(tasks[step.attr("name")] == null)
@@ -833,11 +838,11 @@ function startExecution()
 			
 			var funcName = "func_" + getRandInt(10000,99999);
 			
-			task_steps.push($("<li taskId='" + step.attr("id") +  "' name='funcEnd' funcName='" + funcName + "'>" + funcName + "</li>")[0]);
+			task_steps.push($("<li taskId='" + step.attr("step") +  "' name='funcEnd' funcName='" + funcName + "'>" + funcName + "</li>")[0]);
 			
 			steps.splice(i+1, 0, ...task_steps);
 			
-			code += "$('#" + step.attr("id") + "').addClass('li-executing');";
+			code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');";
 			code += "var " + funcName + " = async function(Params,Vars){ ";			
         }
         else
@@ -846,12 +851,12 @@ function startExecution()
             var exclude = ["elseif", "if", "else", "wrapper", "while", "repeat"];
 			if(!exclude.includes(step.attr("name"))) 
             {
-              code += "$('#" + step.attr("id") + "').addClass('li-executing');";
+              code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');";
             }
             code += generator[step.attr("name")](step);
 			if(!exclude.includes(step.attr("name"))) 
             {	
-          		code += "$('#" + step.attr("id") + "').removeClass('li-executing');";
+          		code += "$('li[step=\"" + step.attr("step") + "\"]').removeClass('li-executing');";
             }
         }
 		step_count++;
@@ -1281,6 +1286,7 @@ function setRobotVars()
     {    
         $("#RobotContext").click();
     }
+	
     if(mouseDown == false && frame % 10 == 0)
     {
         if(document.getElementsByTagName("canvas") != null && !MOVING)
