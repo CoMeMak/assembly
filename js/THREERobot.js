@@ -50,10 +50,11 @@ const THREERobot = function (V_initial, limits, scene) {
 		var cube2 = new THREE.Mesh(geometry, mat);
 		
 		cube2.position.set(0,0,1.3);
-		cube.add( cube2 );		
+		cube.add( cube2 );	
 		
 		scene.add(cube);
 		sceneObjects.push({o:cube,d:2.7});
+		
 	}
 	
 	function moveObjects()
@@ -62,7 +63,7 @@ const THREERobot = function (V_initial, limits, scene) {
 		{
 			var obj = sceneObjects[i];
 			
-			var cond = (obj.o.position.x == Robot.tcp.x / 100 && obj.o.position.y == Robot.tcp.y / 100 && (Robot.tcp.z / 100) - obj.o.position.z < obj.d);
+			var cond = (Math.abs(obj.o.position.x - Robot.tcp.x / 100) < 0.2 && Math.abs(obj.o.position.y - Robot.tcp.y / 100) < 0.2 && (Robot.tcp.z / 100) - obj.o.position.z < obj.d);
 			
 			if(ATTACH && cond)
 			{
@@ -79,6 +80,8 @@ const THREERobot = function (V_initial, limits, scene) {
 				obj.o.rotation.set(0,0,0);
 				obj.o.position.setZ(-1.6);	
 			}
+			Vars.cubelet = {x: obj.o.position.x * 100, y: obj.o.position.y * 100, z: obj.o.position.z * 100};
+			
 		}			
 	}
 
