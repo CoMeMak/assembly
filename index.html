@@ -66,7 +66,8 @@
   
 </head>  
   <script>
-  
+	var ATTACH = false;
+	
 	var force_val = 0;
 	
 	function force()
@@ -554,7 +555,16 @@ function gripper(Params,Vars,action, width)
     else
     {
         console.log("Gripper: " + action + ", width: " + width);
-        resolve(20);
+		if(action == "close_gripper")
+		{
+			ATTACH = true;
+		}
+		else
+		{
+			ATTACH = false;
+		}
+		setTimeout(function(){resolve(20);},200);
+        
     }
   });
 }
