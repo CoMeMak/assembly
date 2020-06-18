@@ -76,8 +76,8 @@ const THREERobot = function (V_initial, limits, scene) {
 			}
 			else
 			{
-				obj.rotation.set(0,0,0);
-				obj.position.setZ(-1.6);	
+				obj.o.rotation.set(0,0,0);
+				obj.o.position.setZ(-1.6);	
 			}
 		}			
 	}
