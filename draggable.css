@@ -31,7 +31,7 @@
 		color: lightslategrey;
     }
     
-    #RobotContext, #ParamsContext, #VarsContext {
+    #RobotContext, #ParamsContext, #VarsContext, #TaskContext {
 		border-color: lightgrey;
         border-style: outset;	
         border-width: 1.5px 1.9px 1.9px 1.5px;
@@ -326,6 +326,22 @@
         background-color: rgba(0, 0, 0,0.015);
         border-color: rgba(0,0,0,0.1);
     }
+	
+	.task_params
+    {
+        z-index: 100; position: absolute; 
+        padding: 10px;
+        display: block; top: 0px; right: 0px;
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+        background-color: rgba(255,255,255,0.5);
+		width: 200px;
+		border-radius: 4px 12px 12px 4px;
+		box-shadow: 0px 0px 5px 5px whitesmoke;
+		border-width: 1.5px 1.9px 1.9px 1.5px;
+		border-style: outset;
+		   
+    }
+	
     .sim_input {
         background-color: rgba(255, 255, 255,0.5);
         width: 50px;

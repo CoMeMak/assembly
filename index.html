@@ -246,7 +246,15 @@
         }        
         
   }
-  
+  var Task_Backup = null;
+  function restoreTask()
+  {
+	if(Task_Backup != null)
+	{
+		Task = Task_Backup;
+		Task_Backup = null;
+	}
+  }
   function addClickEvents(ui_item)
   {
     	ui_item.off("click");
@@ -293,12 +301,12 @@
               	if(!ui_item.hasClass("li-selected"))
 				{
                     $("#ParamsContext").click();
-                 	$("#x").val(parseFloat($("#x").val()) + Params.motion.dP.x);
-                  	$("#y").val(parseFloat($("#y").val()) + Params.motion.dP.y);
-                  	$("#z").val(parseFloat($("#z").val()) + Params.motion.dP.z);
-                  	$("#rx").val(parseFloat($("#rx").val()) + Params.motion.dR.rx);
-                  	$("#ry").val(parseFloat($("#ry").val()) + Params.motion.dR.ry);
-                  	$("#rz").val(parseFloat($("#rz").val()) + Params.motion.dR.rz);
+                 	$("#x").val(parseFloat($("#x").val()) + eval(Params.motion.dP.x));
+                  	$("#y").val(parseFloat($("#y").val()) + eval(Params.motion.dP.y));
+                  	$("#z").val(parseFloat($("#z").val()) + eval(Params.motion.dP.z));
+                  	$("#rx").val(parseFloat($("#rx").val()) + eval(Params.motion.dR.rx));
+                  	$("#ry").val(parseFloat($("#ry").val()) + eval(Params.motion.dR.ry));
+                  	$("#rz").val(parseFloat($("#rz").val()) + eval(Params.motion.dR.rz));
                 }
             });
             $("#ParamsContext").click();
@@ -325,9 +333,11 @@
                 return;
             }            
             //showHelp(ui_item);
-            setTimeout(function(){
+            
+			setTimeout(function(){
 				if(!ui_item.hasClass("li-selected"))
 				{
+					restoreTask();
 					$("li").removeClass("li-selected");
 					ui_item.addClass("li-selected");
                     $("li[head='" + ui_item.attr("id") + "']").addClass("li-selected");
@@ -343,18 +353,40 @@
                         	elem.addClass("li-selected");
                             elem = $(elem).next();
                         } 
+						$("#VarsContext").click();
                     }
-					/*
-					else
+					if(ui_item.hasClass("task"))
 					{
-						setTimeout(function(){$("li").removeClass("li-selected");},300);
-					}*/
+						Task_Backup = Task;
+						Task = JSON.parse(atob(ui_item.attr("params")));
+						$("#TaskContext").click();
+					}
+					
 				}
 				else
 				{
-					$("li").removeClass("li-selected");
-                    
-                    $("#elementHelp").hide();
+					if(ui_item.hasClass("task") && $(".li-selected").length == 1)
+					{
+						Task = editor.get();
+						try
+						{
+							ui_item.attr("params",btoa(JSON.stringify(Task)));
+							$("li").removeClass("li-selected");                    
+							$("#elementHelp").hide();							
+						} 
+						catch (e) 
+						{
+							alert("Input error:" + e);
+						}						
+						restoreTask();
+						$("#TaskContext").click();
+					}
+					else
+					{
+						$("li").removeClass("li-selected");                    
+						$("#elementHelp").hide();
+						restoreTask();
+					}					
 				}
 			},50);						
         });
@@ -506,22 +538,23 @@ function generateBookmarklet()
     code += "tasks." + $('#activeTask').text() + " = ul_content;";
 	w_Vars = JSON.stringify(window.Vars);
 	w_Params = JSON.stringify(window.Params);
+	w_Task = JSON.stringify(window.Task);
 	code += "w_Vars = \"" + btoa(w_Vars) + "\";"; 
-	code += "w_Params = \"" + btoa(w_Params) + "\";"; 
+	code += "w_Params = \"" + btoa(w_Params) + "\";";
+	code += "w_Task = \"" + btoa(w_Task) + "\";";	
 	code += "window.Params = JSON.parse(atob(w_Params)); $('#ParamsContext').click();"; 
     code += "window.Vars = JSON.parse(atob(w_Vars)); $('#VarsContext').click();";
+	code += "window.Task = JSON.parse(atob(w_Task)); $('#TaskContext').click();";
     code += "document.getElementById(\"workflow\").outerHTML = ul_content;";
     code += "$(\'#activeTask\').text('" + $('#activeTask').text() + "');";
     code += "$(\'#bookmarklet\').text('" + $('#activeTask').text() + "');";
-    //code += "var task_li = '<li name=\""+ $('#activeTask').text() +"\" class=\"task draggable rightRounded\"><img src=\"img/task.png\" height=\"15\">&nbsp;" + $('#activeTask').text() + "</li>';";
-    //code += "$(\"#tasks\").append(task_li);";
-    //code += "initSortable();";
+    
     code += "var taskName = \'" + $('#activeTask').text() + "\';";
-    code += "var task = $($(\'.taskPlaceHolder\')[0]);if($(\'#tasks\').find(\"li[name=\'" + $('#activeTask').text() + "\']\").length == 0){ task.show();task.attr(\'name\',taskName);task.html(\'<img src=\"img/task.png\" height=\"15\">&nbsp;\' + taskName);task.removeClass(\'taskPlaceHolder\');};";
+    code += "var task = $($(\'.taskPlaceHolder\')[0]);if($(\'#tasks\').find(\"li[name=\'" + $('#activeTask').text() + "\']\").length == 0){ task.show();task.attr(\'params\',w_Task);task.attr(\'name\',taskName);task.html(\'<img src=\"img/task.png\" height=\"15\">&nbsp;\' + taskName);task.removeClass(\'taskPlaceHolder\');};";
     code += "initSortable(); populateSelects();";
     
     code += "var task_steps = $(\'#workflow li\');";
-    code += "for(var i=1;i<task_steps.length-1;i++){addClickEvents($(task_steps[i]));};";   
+    code += "for(var i=1;i<task_steps.length-1;i++){addClickEvents($(task_steps[i]));};$('#TaskContext').click();";   
 
 	code = "javascript:var injected = function(){" + code + "}; injected();";
 	
@@ -536,10 +569,12 @@ function generateBookmarklet()
 <table cellpadding="0" cellspacing="0" style="position: absolute; z-index: 100; padding: 0; margin: 0; width: 100%; height: 100%;">
 <tr>
 <!-- WORKFLOW -->
+<!-- WORKFLOW -->
 <td class="workflow" colspan="2" valign="top" style="user-select: none;">
 <span class="activeTask" title="Edit task name"><span>✎</span>&nbsp;&nbsp;&nbsp;<span style="font-weight: normal; border-right-width: 1px;" id="activeTask" onclick="$('#activeTask').attr('contenteditable','true');" onfocusout="$('#activeTask').attr('contenteditable','false');">Untitled</span>&nbsp;&nbsp;&nbsp;</span>
 <span title="Drag and drop this link to your browser's bookmarks bar to save this task." class="saveButton" onmouseout="$('#bookmarklet').css('color', 'white');rotate = true;" onmouseover="generateBookmarklet(); rotate = false;$('#bookmarklet').css('color', 'grey');">💾 <a id="bookmarklet" href="#" style="color:white;">Untitled</a></span>
 
+</span>
 <script>
 
 $('.activeTask').keydown(function(e) {
@@ -675,12 +710,12 @@ function driveTo(Params,Vars,target)
 async function relativeMove(Params,Vars)
 {
 	var target = { tcp: {
-            x: parseFloat(Robot.tcp.x) + parseFloat(Params.motion.dP.x),
-            y: parseFloat(Robot.tcp.y) + parseFloat(Params.motion.dP.y),
-            z: parseFloat(Robot.tcp.z) + parseFloat(Params.motion.dP.z),
-            rx: parseFloat(Robot.tcp.rx) + parseFloat(Params.motion.dR.rx),
-            ry: parseFloat(Robot.tcp.ry) + parseFloat(Params.motion.dR.ry),
-            rz: parseFloat(Robot.tcp.rz) + parseFloat(Params.motion.dR.rz) 
+            x: parseFloat(Robot.tcp.x) + parseFloat(eval(Params.motion.dP.x)),
+            y: parseFloat(Robot.tcp.y) + parseFloat(eval(Params.motion.dP.y)),
+            z: parseFloat(Robot.tcp.z) + parseFloat(eval(Params.motion.dP.z)),
+            rx: parseFloat(Robot.tcp.rx) + parseFloat(eval(Params.motion.dR.rx)),
+            ry: parseFloat(Robot.tcp.ry) + parseFloat(eval(Params.motion.dR.ry)),
+            rz: parseFloat(Robot.tcp.rz) + parseFloat(eval(Params.motion.dR.rz)) 
             }
         };
 	return await driveTo(Params,Vars,target);
@@ -803,6 +838,102 @@ const JavaScriptCodeGenerator =
         return "}; await " + step.attr("funcName") + "(Params,Vars);" + "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
     }
 }
+var sikuliCode = "";
+const SikuliCodeGenerator = 
+{
+	"gripperClose": function(step)
+    {
+		return "";
+    },
+    "gripperOpen": function(step)
+    {
+        return "";
+    },
+    "gripperAction": function(step)
+    {
+		return "";
+    },
+    "moveTo": function(step)
+    {
+		var p = JSON.parse(step.attr("params"));
+        var code = "moveTo(" + p.tcp.x + ", " + p.tcp.y + ", " + p.tcp.z + ", " + p.tcp.rx + ", " + p.tcp.ry + ", " + + p.tcp.rz + ", " + Params.motion.velocity + ", " + Params.motion.acceleration + ");\n";
+        sikuliCode += code;
+		return "";
+    },
+    "moveRelative": function(step)
+    {
+        return "";
+    },
+    "repeat": function(step)
+    {
+		sikuliCode += "start_repeat(\"" + eval(step.find("select").val()) + "\");\n";
+        return "";
+    },
+	"while": function(step)
+    {
+        sikuliCode += "start_while(\"" + eval(step.find("select").val()) + "\");\n";
+        return "";
+    },
+    "if": function(step)
+    {
+		sikuliCode += "start_if(\"" + eval(step.find("select").val()) + "\");\n";		
+		return "";
+    },
+    "elseif": function(step)
+    {
+        return "} else if(eval(" + step.find("select").val() + ")){";
+    },
+    "else": function(step)
+    {
+        sikuliCode += "add_else();\n";
+		return "";
+    },
+    "wrapper": function(step)
+    {
+        /*var code = "";
+		if(step.hasClass("if"))
+		{
+			code = "wrap();\n";
+		}
+		else // ... while, repeat, etc.
+		{
+			//...
+		}
+        sikuliCode += code;
+		*/
+		sikuliCode += "wrap();\n";
+		return "";
+    },
+    "setParams": function(step)
+    {
+		return "Params = " + atob(step.attr("params")) + "; userInput(Params);"; // TODO: set jsoneditor params here too
+    },
+    "setVars": function(step)
+    {
+		var code = "var v = " + atob(step.attr("params")) + ";";
+        code += "Vars = {...Vars, ...v}; userInput(Vars); ";
+		return code;
+        //return "Vars = " + step.attr("params") + ";";
+    },
+	/*
+    "export": function(step)
+    {
+        var imp = {};
+        imp[step.attr("params")] = window.Vars[step.attr("params")];
+        return "Vars = {...Vars, ...JSON.parse(" + JSON.stringify(imp) + ")};";
+        //return "Vars = " + step.attr("params") + ";";
+    },
+	*/
+	"eval": function(step)
+    {
+        return "eval(" + step.find("select").val() + ");";
+    },
+	"funcEnd": function(step)
+    {
+        return ";Task = Task_Backup;}; await " + step.attr("funcName") + "(Params,Vars);" + "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
+    }
+}
+
 
 var generator = JavaScriptCodeGenerator;
 
@@ -830,6 +961,7 @@ function startExecution()
                 alert("Please load task '" + step.attr("name") + "' first.");
                 return;
             }
+			
             var task_steps = jQuery.makeArray($($.parseHTML(tasks[step.attr("name")])).find('li'));
             // remove start li
             task_steps.shift();
@@ -843,7 +975,9 @@ function startExecution()
 			steps.splice(i+1, 0, ...task_steps);
 			
 			code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');";
-			code += "var " + funcName + " = async function(Params,Vars){ ";			
+			code += "var " + funcName + " = async function(Params,Vars){ ";
+			var p = atob(step.attr('params'));
+			code += "Task_Backup = Task; Task = JSON.parse(" + p + ")";
         }
         else
         {
@@ -868,6 +1002,63 @@ function startExecution()
     
     eval(code);
 }
+
+function fallbackCopyTextToClipboard(text) {
+  var textArea = document.createElement("textarea");
+  textArea.value = text;
+  
+  // Avoid scrolling to bottom
+  textArea.style.top = "0";
+  textArea.style.left = "0";
+  textArea.style.position = "fixed";
+
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    var successful = document.execCommand('copy');
+    var msg = successful ? 'successful' : 'unsuccessful';
+    console.log('Fallback: Copying text command was ' + msg);
+  } catch (err) {
+    console.error('Fallback: Oops, unable to copy', err);
+  }
+
+  document.body.removeChild(textArea);
+}
+function copyTextToClipboard(text) {
+  if (!navigator.clipboard) {
+    fallbackCopyTextToClipboard(text);
+    return;
+  }
+  navigator.clipboard.writeText(text).then(function() {
+    console.log('Async: Copying to clipboard was successful!');
+  }, function(err) {
+    console.error('Async: Could not copy text: ', err);
+  });
+}
+
+function generateSikuliCode()
+{
+	var boilerplate = "# -*- coding: utf-8 -*-\n";
+	boilerplate += "from URSIM5e import *\n";
+	boilerplate += "initContext();\n";
+	
+	sikuliCode = "";
+	generator = SikuliCodeGenerator;
+	
+	startExecution();	
+	
+	copyTextToClipboard(boilerplate + sikuliCode);
+	
+	generator = JavaScriptCodeGenerator;
+	
+	$("#elementName").text("Sikuli");
+    $("#elementHelp").html("<hr size='1'>The Sikuli code was successfully generated and copied to the clipboard. You can now paste that code into Sikuli. Sikuli is a GUI automation tool that can be used to generate code in Polyscope. Click here for more information.");
+    $("#elementHelp").show();
+	setTimeout(function(){ $("#elementHelp").show(); },3000);
+}
+
 </script>
 
 <ul id="workflow" style="user-select: none; padding-left: 10px; padding-top: 10px;" class="sortable">
@@ -904,8 +1095,7 @@ function toggleHelp()
 </script>
 
 <div id="help" class="helpBox" style="user-select: none; width: 450px;color: grey;font-size: 12px;padding: 22px;font-family: 'Big Shoulders Text', Arial Narrow; font-size: 14px;font-family: Arial Narrow;padding-bottom: 15px;">
-<font color="steelblue" size="3">🛈</font>&nbsp;&nbsp;<b><a href="#"><span id="elementName" onclick="toggleHelp();" title="Show help">Help</span></a></b>
-<span id="elementHelp" style="display: none;" onclick="toggleHelp();">
+<font color="steelblue" size="3">🛈</font>&nbsp;&nbsp;<b><a href="#"><span id="elementName" onclick="toggleHelp();" title="Show help">Help</span></a></b><span id="elementHelp" style="display: none;" onclick="toggleHelp();">
 <hr size="1" />
 Drag and drop elements from the <b>Actor and Task Library</b> 🡖 to the workflow pane 🡔 and place them anywhere between the <b>start</b> and <b>stop</b> elements. Use the keyboard arrows to move the simulator to create a robot task. Click on an empty surface and drag the mouse to rotate the simulator. Keep the <b>ALT</b> key pressed to manually move the robot by dragging its head.
 <br><br>
@@ -913,10 +1103,12 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 </span>
   </div>
 </td>
+
 </tr>
 <tr>
 
-<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:6px; width: 300px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td>&nbsp;&nbsp;</td><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td></tr></table></div><hr style="margin-top: 7px;">
+<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:6px; width: 352px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td>
+<td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td></tr></table></div><hr style="margin-top: 7px;">
 <div id="jsoneditor" style="width: 100%; height: 280px;"></div>
 </td>
 <script>
@@ -945,6 +1137,11 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         editor.setMode("tree");
         editor.set(Params);
       }
+	  else if(context == "TaskContext")
+      {
+        editor.setMode("tree");
+        editor.set(Task);
+      }
       else 
       {
         editor.setMode("view");
@@ -963,7 +1160,12 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 
 <!-- ACTOR LIBRARY -->
 <td class="toolset embossed-light" style="user-select: none;" valign="top">
-<h1>Actor and Task Library</h1>
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr>
+<td align="left"><h1>Actor and Task Library</h1></td>
+<td align="right" valign="top"><a title="Click here to copy Sikuli code to the clipboard." href="javascript:generateSikuliCode();" style="font-size:20px;">📋</a>&nbsp;&nbsp;&nbsp;</td>
+</tr>
+</table>
 <hr>
 <ul id="actors" style="user-select: none;">
   <li id="wp" name="moveTo" class="draggable actor rightRounded" style="padding-right: 45px;">move to</li>
@@ -981,14 +1183,11 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
   <li name="while" class="draggable while rightRounded" style="padding-right: 1px;">while<select name="while-select" class="while-cond condition"></select></li>
   <li name="break" class="draggable break leftRounded">break</li>
   <li name="repeat" class="draggable repeat rightRounded" style="padding-right: 1px;">repeat<select name="repeat-select" class="repeat-cond counter"></select></li>
-  
 </ul>
 <ul id="settings">
   <li name="setParams" title="Sets the robot parameters to their current value in the Parameters tab." class="draggable settings rightRounded" style="padding-right: 7px; padding-top: 8px; padding-bottom: 6px; background-color: whitesmoke;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-left: 2px;padding-right: 1px;"><img name="setParams" src="img/params.png" height="13"></td><td valign="top" name="setParams"></td></tr></table></li>
-      <li name="setVars" title="Sets the contents of the Vars object as currently defined in the Variables tab." class="draggable settings rightRounded" style=" background-color: whitesmoke;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-right: 1px;"><img name="setVars" src="img/vars.png" height="14"></td><td valign="top" name="setVars"></td></tr></table></li>
-  
+  <li name="setVars" title="Sets the contents of the Vars object as currently defined in the Variables tab." class="draggable settings rightRounded" style=" background-color: whitesmoke;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td style="padding-right: 1px;"><img name="setVars" src="img/vars.png" height="14"></td><td valign="top" name="setVars"></td></tr></table></li>
   <li name="eval" title="Evaluates the expression indicated in the drop-down list." class="draggable settings rightRounded" style="padding-right: 1px;"><table height="100%" cellpadding="0" cellspacing="0"><tr><td name="eval">⌨</td><td valign="top" name="eval"><select name="eval-select" class="eval expression"></select></td></tr></table></li>  
-
 </ul>
 <ul id="tasks">
 <li name="taskPlaceHolder" class="taskPlaceHolder draggable rightRounded task">taskPlaceHolder</li>
@@ -1063,6 +1262,12 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
             "motion": {"acceleration": 0.05, "velocity": 0.05,"dP": {x:0,y:0,z:0}, "dR": {rx:0,ry:0,rz:0}},
             "effector": {"width": 80, "force": 30}
         };
+		
+		var Task = {
+			"boolParam":true,
+			"intParam":0,
+			"stringParam":"setMe",			
+		};
         
         
         // create the editor
@@ -1119,7 +1324,12 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
                 else if(context == "ParamsContext")
                 {
                     Params = editor.get();
-                }                
+                }
+                else if(context == "TaskContext")
+                {
+                    Task = editor.get();
+                }
+
                 
                 populateSelects();
             },
@@ -1320,6 +1530,22 @@ function setRobotVars()
     
 
 setInterval(setRobotVars,100);
+</script>
+
+<script>
+	function generateForm(p)
+	{
+		var html = "<div id='TASK_PARAMS' class='task_params task'><table>";
+		for (var key in p) {
+			if (p.hasOwnProperty(key)) {
+				console.log(key + " -> " + p[key]);
+				html += "<tr><td>" + key + "</td><td>" + "<input class='sim_input' style='width: 100px;' type='text' id='TASK_PARAMS_" + key + "' value='" + p[key] + "'/></td></tr>";
+			}
+		}
+		html += "</table></div>";		
+		$("body").append($(html));
+		
+	}
 </script>
 
 </body>
