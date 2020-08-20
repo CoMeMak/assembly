@@ -977,7 +977,7 @@ function startExecution()
 			code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');";
 			code += "var " + funcName + " = async function(Params,Vars){ ";
 			var p = atob(step.attr('params'));
-			code += "Task_Backup = Task; Task = JSON.parse(" + p + ")";
+			code += "Task_Backup = Task; Task = JSON.parse(" + JSON.stringify(p) + ");";
         }
         else
         {
