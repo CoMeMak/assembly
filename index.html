@@ -44,7 +44,7 @@
   <link rel="stylesheet" href="draggable.css" />
   <link rel="stylesheet" href="switch.css" />
   
-  
+  <script src="js/beautify.js" type="text/javascript" charset="utf-8"></script>
     <script src="js/require.js" charset="utf-8"></script>
   <!-- <script src="/socket.io/socket.io.js"></script> -->
 
@@ -59,7 +59,11 @@
   <script src="vendor/three_js/TransformControls.js"></script>
   <script src="vendor/EventDispatcher.js"></script>
   <script src="js/THREERobot.js"></script>
-
+  <script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  
+  
   <link href="css/main.css" rel="stylesheet" />
 
   
@@ -602,7 +606,7 @@ function gripper(Params,Vars,action, width)
   if($("#robot_connected").is(":checked"))
     {
         var params = { cmd: action };
-        if(action == "gripper_action")
+        if(action == "action")
         {
             params["width"] = width;
         }
@@ -613,7 +617,7 @@ function gripper(Params,Vars,action, width)
     else
     {
         console.log("Gripper: " + action + ", width: " + width);
-		if(action == "close_gripper")
+		if(action == "close")
 		{
 			ATTACH = true;
 		}
@@ -765,15 +769,15 @@ const JavaScriptCodeGenerator =
 {
     "gripperClose": function(step)
     {
-		return "await gripper(Params,Vars,'close_gripper');"
+		return "await gripper(Params,Vars,'close');"
     },
     "gripperOpen": function(step)
     {
-        return "await gripper(Params,Vars,'open_gripper');"
+        return "await gripper(Params,Vars,'open');"
     },
     "gripperAction": function(step)
     {
-		return "await gripper(Params,Vars,'gripper_action');"
+		return "await gripper(Params,Vars,'action');"
     },
     "moveTo": function(step)
     {
@@ -811,12 +815,12 @@ const JavaScriptCodeGenerator =
     },
     "setParams": function(step)
     {
-		return "Params = " + atob(step.attr("params")) + "; userInput(Params);"; // TODO: set jsoneditor params here too
+		return "Params = " + atob(step.attr("params")) + "; \n$('#ParamsContext').click();"; // TODO: set jsoneditor params here too
     },
     "setVars": function(step)
     {
-		var code = "var v = " + atob(step.attr("params")) + ";";
-        code += "Vars = {...Vars, ...v}; userInput(Vars); ";
+		var code = "var v = " + atob(step.attr("params")) + "; \n$('#VarsContext').click();";
+        code += "Vars = {...Vars, ...v};";
 		return code;
         //return "Vars = " + step.attr("params") + ";";
     },
@@ -841,7 +845,97 @@ const JavaScriptCodeGenerator =
 var sikuliCode = "";
 const SikuliCodeGenerator = 
 {
-
+	"gripperClose": function(step)
+    {
+		return "";
+    },
+    "gripperOpen": function(step)
+    {
+        return "";
+    },
+    "gripperAction": function(step)
+    {
+		return "";
+    },
+    "moveTo": function(step)
+    {
+		var p = JSON.parse(step.attr("params"));
+        var code = "moveTo(" + p.tcp.x + ", " + p.tcp.y + ", " + p.tcp.z + ", " + p.tcp.rx + ", " + p.tcp.ry + ", " + + p.tcp.rz + ", " + Params.motion.velocity + ", " + Params.motion.acceleration + ");\n";
+        sikuliCode += code;
+		return "";
+    },
+    "moveRelative": function(step)
+    {
+        return "";
+    },
+    "repeat": function(step)
+    {
+		sikuliCode += "start_repeat(\"" + eval(step.find("select").val()) + "\");\n";
+        return "";
+    },
+	"while": function(step)
+    {
+        sikuliCode += "start_while(\"" + eval(step.find("select").val()) + "\");\n";
+        return "";
+    },
+    "if": function(step)
+    {
+		sikuliCode += "start_if(\"" + eval(step.find("select").val()) + "\");\n";		
+		return "";
+    },
+    "elseif": function(step)
+    {
+        return "} else if(eval(" + step.find("select").val() + ")){";
+    },
+    "else": function(step)
+    {
+        sikuliCode += "add_else();\n";
+		return "";
+    },
+    "wrapper": function(step)
+    {
+        /*var code = "";
+		if(step.hasClass("if"))
+		{
+			code = "wrap();\n";
+		}
+		else // ... while, repeat, etc.
+		{
+			//...
+		}
+        sikuliCode += code;
+		*/
+		sikuliCode += "wrap();\n";
+		return "";
+    },
+    "setParams": function(step)
+    {
+		return "Params = " + atob(step.attr("params")) + "; userInput(Params);"; // TODO: set jsoneditor params here too
+    },
+    "setVars": function(step)
+    {
+		var code = "var v = " + atob(step.attr("params")) + ";";
+        code += "Vars = {...Vars, ...v}; userInput(Vars); ";
+		return code;
+        //return "Vars = " + step.attr("params") + ";";
+    },
+	/*
+    "export": function(step)
+    {
+        var imp = {};
+        imp[step.attr("params")] = window.Vars[step.attr("params")];
+        return "Vars = {...Vars, ...JSON.parse(" + JSON.stringify(imp) + ")};";
+        //return "Vars = " + step.attr("params") + ";";
+    },
+	*/
+	"eval": function(step)
+    {
+        return "eval(" + step.find("select").val() + ");";
+    },
+	"funcEnd": function(step)
+    {
+        return ";Task = Task_Backup;}; await " + step.attr("funcName") + "(Params,Vars);" + "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
+    }
 }
 
 
@@ -852,6 +946,79 @@ function getRandInt(min, max) {
 }
 
 var step_count = 0;
+
+function generateJSCode(highlight = true, execProg = true)
+{
+	step_count = 0;
+	var steps = jQuery.makeArray($("#workflow li"));
+	var code = "";
+	
+	for(var i=1;i<steps.length-1;i++)
+    {
+        var step = $(steps[i]);
+		
+		step.attr("step", "step_" + step_count);
+		if(step.hasClass("task"))
+        {
+            if(tasks[step.attr("name")] == null)
+            {
+                alert("Please load task '" + step.attr("name") + "' first.");
+                return;
+            }
+			
+            var task_steps = jQuery.makeArray($($.parseHTML(tasks[step.attr("name")])).find('li'));
+            // remove start li
+            task_steps.shift();
+            // remove stop li
+            task_steps.pop();
+			
+			var funcName = "func_" + getRandInt(10000,99999);
+			
+			task_steps.push($("<li taskId='" + step.attr("step") +  "' name='funcEnd' funcName='" + funcName + "'>" + funcName + "</li>")[0]);
+			
+			steps.splice(i+1, 0, ...task_steps);
+			
+			if(highlight)code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');\n";
+			code += "var " + funcName + " = async function(Params,Vars){ \n";
+			var p = atob(step.attr('params'));
+			code += "Task_Backup = Task; \n Task = JSON.parse(" + JSON.stringify(p) + ");";
+        }
+        else
+        {
+			console.log(step.attr("name"));
+            var exclude = ["elseif", "if", "else", "wrapper", "while", "repeat"];
+			if(!exclude.includes(step.attr("name"))) 
+            {
+              if(highlight) code += "$('li[step=\"" + step.attr("step") + "\"]').addClass('li-executing');\n";
+            }
+            code += generator[step.attr("name")](step) + "\n";
+			if(!exclude.includes(step.attr("name"))) 
+            {	
+          		if(highlight) code += "$('li[step=\"" + step.attr("step") + "\"]').removeClass('li-executing');\n";
+            }
+        }
+		step_count++;
+    }
+    
+    if(execProg) code = "var execProgram = async function() { " + code + "};\n";
+	if(execProg) code += "execProgram();\n";
+    
+    console.log(code);
+    
+	
+	return code;	
+}
+
+function startExecution()
+{
+	$("li").removeClass("li-selected");
+    
+	var code = generateJSCode();
+    
+    eval(code);
+}
+
+/*
 function startExecution()
 {
 	step_count = 0;
@@ -912,7 +1079,7 @@ function startExecution()
     
     eval(code);
 }
-
+*/
 function fallbackCopyTextToClipboard(text) {
   var textArea = document.createElement("textarea");
   textArea.value = text;
@@ -1017,9 +1184,13 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 </tr>
 <tr>
 
-<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:6px; width: 352px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td>
-<td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td></tr></table></div><hr style="margin-top: 7px;">
-<div id="jsoneditor" style="width: 100%; height: 280px;"></div>
+<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:5px; width: 350px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Params</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Vars</span></td>
+<td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td><td><span id="CodeContext" title="View the JavaScript source code of the current task" class="button">⌨&nbsp;Code</span></td></tr></table></div><hr style="margin-top: 7px;">
+<div id="jsoneditor" style="width: 100%; height: 300px;"></div>
+<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 369px; height: 300px;">function foo(items) {
+    var x = "All this is syntax highlighted";
+    return x;
+}</div>
 </td>
 <script>
     $(".button").click(function() {
@@ -1031,6 +1202,10 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
       $(this).addClass("clicked");
       
       var context = $(".button.clicked").attr("id");
+	  
+	  $("#jsoneditor").show();
+	  $("#codeeditor").hide();
+	  
       
       if(context == "RobotContext")
       {
@@ -1052,6 +1227,27 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         editor.setMode("tree");
         editor.set(Task);
       }
+	  else if(context == "CodeContext")
+	  {
+	    $("#jsoneditor").hide();
+		$("#codeeditor").show();
+		var code = generateJSCode(false, false);
+		
+		
+		code = js_beautify(code) + "\n";
+		
+		var ce = ace.edit("codeeditor");
+		ce.setOptions({
+			wrap: false,   // wrap text to view
+			
+		});
+		
+		ce.setValue(code, -1);
+		//ce.setTheme("ace/theme/monokai");
+		ce.getSession().setMode("ace/mode/javascript");
+		ce.container.style.background = "whitesmoke";
+		
+	  }
       else 
       {
         editor.setMode("view");
