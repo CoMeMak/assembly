@@ -70,6 +70,7 @@
   
 </head>  
   <script>
+    const global = window;
 	var ATTACH = false;
 	
 	var force_val = 0;
@@ -815,11 +816,11 @@ const JavaScriptCodeGenerator =
     },
     "setParams": function(step)
     {
-		return "Params = " + atob(step.attr("params")) + "; \n$('#ParamsContext').click();"; // TODO: set jsoneditor params here too
+		return "Params = " + atob(step.attr("params")) + "; \n"; // TODO: set jsoneditor params here too
     },
     "setVars": function(step)
     {
-		var code = "var v = " + atob(step.attr("params")) + "; \n$('#VarsContext').click();";
+		var code = "var v = " + atob(step.attr("params")) + "; \n";
         code += "Vars = {...Vars, ...v};";
 		return code;
         //return "Vars = " + step.attr("params") + ";";
@@ -839,7 +840,12 @@ const JavaScriptCodeGenerator =
     },
 	"funcEnd": function(step)
     {
-        return "Task = Task_Backup; }; await " + step.attr("funcName") + "(Params,Vars);" + "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
+        var code = "}; await " + step.attr("funcName") + "(Params,Vars);";
+		if(step.highlight)
+		{
+			code += "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
+		}
+		return code;
     }
 }
 var sikuliCode = "";
@@ -934,11 +940,7 @@ const SikuliCodeGenerator =
     },
 	"funcEnd": function(step)
     {
-        var code = ";}; await " + step.attr("funcName") + "(Params,Vars);"; 
-		
-		if(step["highlight"]) code += "$('li[step=\"" + step.attr("taskId") + "\"]').removeClass('li-executing');";
-		
-		return code;
+        
     }
 }
 
@@ -977,7 +979,7 @@ function generateJSCode(highlight = true, execProg = true)
             // remove stop li
             task_steps.pop();
 			
-			var funcName = "func_" + getRandInt(10000,99999);
+			var funcName = "t_" + getRandInt(1000,9999);
 			
 			task_steps.push($("<li taskId='" + step.attr("step") +  "' name='funcEnd' funcName='" + funcName + "'>" + funcName + "</li>")[0]);
 			
@@ -1192,10 +1194,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 <td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:5px; width: 354px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Params</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Vars</span></td>
 <td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td><td><span id="CodeContext" title="View the JavaScript source code of the current task" class="button">⌨&nbsp;Code</span></td></tr></table></div><hr style="margin-top: 7px;">
 <div id="jsoneditor" style="width: 100%; height: 300px;"></div>
-<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 373px; height: 300px;">function foo(items) {
-    var x = "All this is syntax highlighted";
-    return x;
-}</div>
+<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 373px; height: 300px;"></div>
 </td>
 <script>
     $(".button").click(function() {
@@ -1237,7 +1236,6 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 	    $("#jsoneditor").hide();
 		$("#codeeditor").show();
 		var code = generateJSCode(false, false);
-		
 		
 		code = js_beautify(code) + "\n";
 		
