@@ -267,7 +267,7 @@
 	}
 	
     
-    .button {
+    .button,.codebutton {
         border-radius: 3px;
         margin-bottom: 0;
         font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
@@ -280,6 +280,12 @@
     }
     
     .button:hover {
+        background-color: black;
+        border-color: black;
+        border-radius: 3px;
+        color: white;
+    }
+	.codebutton:hover {
         background-color: black;
         border-color: black;
         border-radius: 3px;

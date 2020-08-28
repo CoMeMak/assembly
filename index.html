@@ -1201,10 +1201,9 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 </tr>
 <tr>
 
-<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:5px; width: 354px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Params</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Vars</span></td>
-<td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td><td><span id="CodeContext" title="View the JavaScript source code of the current task" class="button">⌨&nbsp;Code</span></td></tr></table></div><hr style="margin-top: 7px;">
+<td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:6px; width: 330px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Parameters</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Variables</span></td>
+<td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td></tr></table></div><hr style="margin-top: 7px;">
 <div id="jsoneditor" style="width: 100%; height: 280px;"></div>
-<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 373px; height: 280px;"></div>
 </td>
 <script>
     $(".button").click(function() {
@@ -1218,7 +1217,6 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
       var context = $(".button.clicked").attr("id");
 	  
 	  $("#jsoneditor").show();
-	  $("#codeeditor").hide();
 	  
       
       if(context == "RobotContext")
@@ -1241,27 +1239,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         editor.setMode("tree");
         editor.set(Task);
       }
-	  else if(context == "CodeContext")
-	  {
-	    $("#jsoneditor").hide();
-		$("#codeeditor").show();
-		var code = generateJSCode(false, false);
-		
-		code = js_beautify(code) + "\n";
-		
-		var ce = ace.edit("codeeditor");
-		ce.setOptions({
-			wrap: false,   // wrap text to view
-			
-		});
-		
-		ce.setValue(code, -1);
-		//ce.setTheme("ace/theme/monokai");
-		ce.getSession().setMode("ace/mode/javascript");
-		ce.container.style.background = "whitesmoke";
-		
-	  }
-      else 
+	  else 
       {
         editor.setMode("view");
         editor.set(Robot);
@@ -1275,6 +1253,42 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
           $("table.jsoneditor-tree").css("margin-left","-22px");          
       }
     });
+
+
+	function showCode()
+	{
+	    //$("#jsoneditor").hide();
+		if($("#CodeContext").hasClass("clicked"))
+		{
+			$("#codeeditor").hide();
+			$("#CodeContext").removeClass("clicked");
+		}
+		else
+		{
+			$("#codeeditor").show();
+			$("#CodeContext").addClass("clicked");
+			var code = generateJSCode(false, false);
+			if(code.length == 0)
+			{
+				code += "// this task is empty";
+			}
+			
+			code = js_beautify(code) + "\n";
+			
+			var ce = ace.edit("codeeditor");
+			ce.setOptions({
+				wrap: true,   // wrap text to view
+				
+			});
+			
+			ce.setValue(code, -1);
+			//ce.setTheme("ace/theme/monokai");
+			ce.getSession().setMode("ace/mode/javascript");
+			ce.container.style.background = "rgba(76, 175, 80, 0.0)";		
+			ce.renderer.setShowGutter(false);
+		}
+	}
+
 </script>
 
 <!-- ACTOR LIBRARY -->
@@ -1282,10 +1296,15 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr>
 <td align="left"><h1>Actor and Task Library</h1></td>
+<td align="right"><span id="CodeContext" onclick="showCode();" style="margin-top: -2px;margin-bottom:0;margin-right: 12px; padding-left: 3px; padding-right: 2px;" title="Show / hide the source code of the current task" class="codebutton"><img src="img/code.png" height="18"></span></td>
+<!--
 <td align="right" valign="top"><a title="Click here to copy Sikuli code to the clipboard." href="javascript:generateSikuliCode();" style="font-size:20px;">📋</a>&nbsp;&nbsp;&nbsp;</td>
+-->
 </tr>
 </table>
 <hr>
+<table width="100%">
+<tr><td valign="top">
 <ul id="actors" style="user-select: none;">
   <li id="wp" name="moveTo" class="draggable actor rightRounded" style="padding-right: 45px;">move to</li>
   <li name="moveRelative" title="Will move relative to the current position by the amount specified by the dP and dR parameters." class="draggable actor rightRounded" style="padding-top: 7px;padding-bottom: 7px;"><font size="4">⥅</font>dP <font size="4">⤽</font>dR</li>
@@ -1351,7 +1370,11 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 <li name="taskPlaceHolder" class="taskPlaceHolder draggable rightRounded task">taskPlaceHolder</li>
 
 </ul>
-
+</td>
+<td align="right">
+<div id="codeeditor" style="display: hidden; margin-top: -10px; padding: 0px; width: 400px; height: 285px;"></div>
+</td>
+</tr></table>
 </td>
 </tr>
 
