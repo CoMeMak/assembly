@@ -286,12 +286,18 @@
         color: white;
     }
 	.codebutton:hover {
-        background-color: black;
+        background-color: lightsteelblue;
         border-color: black;
         border-radius: 3px;
         color: white;
     }
-    
+    .codeclicked
+	{
+		background-color: lightsteelblue;
+        color: white;
+      	border-style: inset;	
+        border-width: 1.5px 1.9px 1.9px 1.5px;
+	}
     .clicked
     {
         background-color: black;

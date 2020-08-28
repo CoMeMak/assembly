@@ -1153,10 +1153,15 @@ function generateSikuliCode()
 	setTimeout(function(){ $("#elementHelp").show(); },3000);
 }
 
+function play()
+{
+	generateSikuliCode();
+	startExecution;	
+}
 </script>
 
 <ul id="workflow" style="user-select: none; padding-left: 10px; padding-top: 10px;" class="sortable">
-  <li name="start" onclick="startExecution()" class="fixed rightRounded" style="background-color: black; border-color: lightgrey; border-style: outset; border-width: 1.5px 1.9px 1.9px 1.5px; color: white;">
+  <li name="start" onclick="play();" class="fixed rightRounded" style="background-color: black; border-color: lightgrey; border-style: outset; border-width: 1.5px 1.9px 1.9px 1.5px; color: white;">
   &nbsp;start&nbsp;&nbsp;<font color="DarkSeaGreen">▶</font>
   </li>
   <li name="stop" class="leftRounded" style="background-color: black; color: white; display: table-cell; vertical-align: middle; border-color: lightgrey; border-style: outset; border-width: 1.5px 1.9px 1.9px 1.5px;">&nbsp;stop&nbsp;&nbsp;<font color="LightCoral">◼</font></li>
@@ -1258,15 +1263,15 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 	function showCode()
 	{
 	    //$("#jsoneditor").hide();
-		if($("#CodeContext").hasClass("clicked"))
+		if($("#CodeContext").hasClass("codeclicked"))
 		{
 			$("#codeeditor").hide();
-			$("#CodeContext").removeClass("clicked");
+			$("#CodeContext").removeClass("codeclicked");
 		}
 		else
 		{
 			$("#codeeditor").show();
-			$("#CodeContext").addClass("clicked");
+			$("#CodeContext").addClass("codeclicked");
 			var code = generateJSCode(false, false);
 			if(code.length == 0)
 			{
