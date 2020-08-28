@@ -252,11 +252,22 @@
         
   }
   var Task_Backup = null;
-  function restoreTask()
+  function restoreTask(ui_item)
   {
 	if(Task_Backup != null)
 	{
-		Task = Task_Backup;
+		var t = window.Task;
+						try
+						{
+							ui_item.attr("params",btoa(JSON.stringify(t)));
+							$("li").removeClass("li-selected");                    
+							$("#elementHelp").hide();							
+						} 
+						catch (e) 
+						{
+							alert("Input error:" + e);
+						}
+		window.Task = Task_Backup;
 		Task_Backup = null;
 	}
   }
@@ -342,7 +353,18 @@
 			setTimeout(function(){
 				if(!ui_item.hasClass("li-selected"))
 				{
-					restoreTask();
+					if($("li.li-selected").length > 0)
+					{
+						var it = $($("li.li-selected")[0]);
+						if(it.hasClass("task"))
+						{
+							restoreTask(it);
+							if($("#TaskContext").hasClass("clicked"))
+							{
+								$("#TaskContext").click();
+							}
+						}
+					}
 					$("li").removeClass("li-selected");
 					ui_item.addClass("li-selected");
                     $("li[head='" + ui_item.attr("id") + "']").addClass("li-selected");
@@ -362,35 +384,23 @@
                     }
 					if(ui_item.hasClass("task"))
 					{
-						Task_Backup = Task;
-						Task = JSON.parse(atob(ui_item.attr("params")));
+						Task_Backup = window.Task;
+						window.Task = JSON.parse(atob(ui_item.attr("params")));
 						$("#TaskContext").click();
 					}
-					
 				}
 				else
 				{
 					if(ui_item.hasClass("task") && $(".li-selected").length == 1)
 					{
-						Task = editor.get();
-						try
-						{
-							ui_item.attr("params",btoa(JSON.stringify(Task)));
-							$("li").removeClass("li-selected");                    
-							$("#elementHelp").hide();							
-						} 
-						catch (e) 
-						{
-							alert("Input error:" + e);
-						}						
-						restoreTask();
+						restoreTask(ui_item);
 						$("#TaskContext").click();
 					}
 					else
 					{
 						$("li").removeClass("li-selected");                    
 						$("#elementHelp").hide();
-						restoreTask();
+						restoreTask(ui_item);
 					}					
 				}
 			},50);						
@@ -1193,8 +1203,8 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 
 <td align="left" style="user-select: none; padding-top: 4px;padding-bottom: 0px;padding-left:5px; width: 354px;" onmouseover="scrolling = false;" onmouseout="scrolling = true;" class="toolset embossed-light" valign="top"><table cellspacing="0" cellpadding="0"><tr><td><span id="RobotContext" title="View the robot's state ('Robot' object)" class="button clicked"><img src="img/mechanical-arm2.png" height="13">&nbsp;Robot</span></td><td><span id="ParamsContext" title="View/set robot parameters ('Params' object)" class="button"><img src="img/params.png" height="13">&nbsp;Params</span></td><td><span id="VarsContext" title="View/define application variables ('Vars' object)" class="button"><img src="img/vars.png" height="13">&nbsp;Vars</span></td>
 <td><span id="TaskContext" title="View/define parameters for the current task" class="button"><img src="img/task.png" height="13">&nbsp;Task</span></td><td><span id="CodeContext" title="View the JavaScript source code of the current task" class="button">⌨&nbsp;Code</span></td></tr></table></div><hr style="margin-top: 7px;">
-<div id="jsoneditor" style="width: 100%; height: 300px;"></div>
-<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 373px; height: 300px;"></div>
+<div id="jsoneditor" style="width: 100%; height: 280px;"></div>
+<div id="codeeditor" style="display: hidden; margin-left: -20px; padding: 0px; width: 373px; height: 280px;"></div>
 </td>
 <script>
     $(".button").click(function() {
