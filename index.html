@@ -830,10 +830,7 @@ const JavaScriptCodeGenerator =
     },
     "setVars": function(step)
     {
-		var code = "var v = " + atob(step.attr("params")) + "; \n";
-        code += "Vars = {...Vars, ...v};";
-		return code;
-        //return "Vars = " + step.attr("params") + ";";
+		return "Vars = " + atob(step.attr("params")) + "; \n";        
     },
 	/*
     "export": function(step)
@@ -1291,6 +1288,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 			ce.getSession().setMode("ace/mode/javascript");
 			ce.container.style.background = "rgba(76, 175, 80, 0.0)";		
 			ce.renderer.setShowGutter(false);
+			ce.setReadOnly(true);
 		}
 	}
 
