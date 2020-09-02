@@ -278,6 +278,20 @@
           margin-bottom: 1px;
           display: inline-block;
     }
+	.langbutton {
+        border-radius: 3px;
+        margin-bottom: 0;
+        font-family: 'Big Shoulders Text', Arial Narrow; font-size: 15px;
+          margin: 3px; padding-top: 8px; padding: 7px; padding-bottom: 6px; border-width: 1px; border-style: solid; 
+          cursor: pointer;      
+          height: 18px;
+          border-color: black;
+          margin-bottom: 1px;
+          display: inline-block;
+		  border: 0px;
+		  margin-top: 0px;
+		  margin-bottom:0;
+    }
     
     .button:hover {
         background-color: black;
@@ -291,12 +305,21 @@
         border-radius: 3px;
         color: white;
     }
+	.langbutton:hover {
+        background-color: lightgrey;
+        color: white;
+    }
     .codeclicked
 	{
 		background-color: lightsteelblue;
         color: white;
       	border-style: inset;	
         border-width: 1.5px 1.9px 1.9px 1.5px;
+	}
+	.langclicked
+	{
+		background-color: lightgrey;
+        color: white;      	
 	}
     .clicked
     {
