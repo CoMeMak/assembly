@@ -279,6 +279,7 @@
 			ui_item.click(function() {
 				if(!ui_item.hasClass("li-selected"))
 				{
+					
 					ATTACH = true;
 				}
 			});
@@ -288,11 +289,12 @@
 			ui_item.click(function() {
 				if(!ui_item.hasClass("li-selected"))
 				{
+					
 					ATTACH = false;
 				}
 			});
 		}
-        else if(ui_item.attr("name") == "moveTo")
+		else if(ui_item.attr("name") == "moveTo")
         {
              ui_item.click(function() {
 				if(!ui_item.hasClass("li-selected"))
@@ -343,6 +345,8 @@
              });
              $("#VarsContext").click();
         }        
+		$("#gripper_closed").prop("checked", ATTACH);
+		$("#gripper_slider").attr("title", (ATTACH)?"closed":"open");
 		ui_item.click(function(event) {
 			if(event.target.nodeName == 'SELECT')
             {
@@ -636,6 +640,8 @@ function gripper(Params,Vars,action, width)
 		{
 			ATTACH = false;
 		}
+		$("#gripper_closed").prop("checked", ATTACH);
+		$("#gripper_slider").attr("title", (ATTACH)?"closed":"open");
 		setTimeout(function(){resolve(20);},200);
         
     }
@@ -1141,8 +1147,9 @@ function generateSikuliCode()
 	startExecution();	
 	
 	generator = JavaScriptCodeGenerator;
+	var monitors = 'enforce_speed_limit();\n';
 	
-	return (boilerplate + sikuliCode);
+	return (boilerplate + sikuliCode + monitors);
 	
 	/*
 	$("#elementName").text("Sikuli");
@@ -1397,7 +1404,7 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
 </ul>
 </td>
 <td align="right">
-<div id="codeeditor" style="display: hidden; margin-top: -10px; padding: 0px; width: 450px; height: 285px;"></div>
+<div id="codeeditor" onmouseover="rotate = false;" onmouseout="rotate = true;" style="display: hidden; margin-top: -10px; padding: 0px; width: 450px; height: 285px;"></div>
 </td>
 </tr></table>
 </td>
@@ -1518,7 +1525,9 @@ indent();
 </script>
 
 <div id="sim_controls" align="center" class="sim_controls" onmouseover="rotate = false;" onmouseout="rotate = true;">
-Connect to robot &nbsp;<label class="switch"><input id="robot_connected" type="checkbox"><span class="slider round"></span></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Connect to robot &nbsp;<label class="switch"><input id="robot_connected" type="checkbox"><span class="slider round"></span></label>&nbsp;&nbsp;
+Gripper status &nbsp;<label class="switch"><input id="gripper_closed" type="checkbox"><span id="gripper_slider" title="open" class="slider round"></span></label>
+&nbsp;&nbsp;
 
 	x: <input type="number" class="sim_input" id="x" step="1" value="300"></input>&nbsp;
 	y: <input type="number" class="sim_input" id="y" step="1" value="300"></input>&nbsp;
@@ -1594,6 +1603,17 @@ function setRobotVars()
     {
         $(".sim_input").prop( "disabled", false ); 
     }
+	
+	if($("#gripper_closed").is(":checked"))
+    {
+        ATTACH = true;
+    }
+    else
+    {
+        ATTACH = false;
+    }
+	$("#gripper_slider").attr("title", (ATTACH)?"closed":"open");
+	
     var robot_connected = $("#robot_connected").is(":checked");
     if(robot_connected && frame % 3 == 0)
     {
