@@ -566,7 +566,7 @@ function generateBookmarklet()
 	code += "window.Task = JSON.parse(atob(w_Task)); $('#TaskContext').click();";
     code += "document.getElementById(\"workflow\").outerHTML = ul_content;";
     code += "$(\'#activeTask\').text('" + $('#activeTask').text() + "');";
-    code += "$(\'#bookmarklet\').text('" + $('#activeTask').text() + "');";
+    code += "$(\'#bookmarklet\').text('💾');";
     
     code += "var taskName = \'" + $('#activeTask').text() + "\';";
     code += "var task = $($(\'.taskPlaceHolder\')[0]);if($(\'#tasks\').find(\"li[name=\'" + $('#activeTask').text() + "\']\").length == 0){ task.show();task.attr(\'params\',w_Task);task.attr(\'name\',taskName);task.html(\'<img src=\"img/task.png\" height=\"15\">&nbsp;\' + taskName);task.removeClass(\'taskPlaceHolder\');};";
@@ -577,8 +577,11 @@ function generateBookmarklet()
 
 	code = "javascript:var injected = function(){" + code + "}; injected();";
 	
-	$("#bookmarklet").attr("href", code);
-    $("#bookmarklet").text($("#activeTask").text());
+	//$("#bookmarklet").attr("href", code);
+    $("#bookmarklet").attr("href", code);
+    //$("#bookmarklet").text($("#activeTask").text());    
+    $("#bookmarklet").text("💾 " + $("#activeTask").text());
+    
     
 }
 
@@ -591,7 +594,7 @@ function generateBookmarklet()
 <!-- WORKFLOW -->
 <td class="workflow" colspan="2" valign="top" style="user-select: none;">
 <span class="activeTask" title="Edit task name"><span>✎</span>&nbsp;&nbsp;&nbsp;<span style="font-weight: normal; border-right-width: 1px;" id="activeTask" onclick="$('#activeTask').attr('contenteditable','true');" onfocusout="$('#activeTask').attr('contenteditable','false');">Untitled</span>&nbsp;&nbsp;&nbsp;</span>
-<span title="Drag and drop this link to your browser's bookmarks bar to save this task." class="saveButton" onmouseout="$('#bookmarklet').css('color', 'white');rotate = true;" onmouseover="generateBookmarklet(); rotate = false;$('#bookmarklet').css('color', 'grey');">💾 <a id="bookmarklet" href="#" style="color:white;">Untitled</a></span>
+<span title="Drag and drop this link to your browser's bookmarks bar to save this task." class="saveButton" onmouseout="$('#bookmarklet').text('💾');rotate = true;" onmouseover="generateBookmarklet(); rotate = false;$('#bookmarklet').css('color', 'grey');"><a id="bookmarklet" href="#" style="color:lightgrey;">💾</a></span>
 
 </span>
 <script>
