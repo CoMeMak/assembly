@@ -489,17 +489,17 @@
             
             if(newelement.attr("name") == "if")
             {
-                $("<li name='wrapper' head='" + rid + "' class='if rightRounded'>&nbsp;&nbsp;</li>").insertAfter( "#newElement" );
+                $("<li name='wrapper' head='" + rid + "' class='if leftRounded'>&nbsp;&nbsp;</li>").insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else if(newelement.attr("name") == "while")
             {
-                $( "<li name='wrapper' head='" + rid + "' class='while rightRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
+                $( "<li name='wrapper' head='" + rid + "' class='while leftRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else if(newelement.attr("name") == "repeat")
             {
-                $( "<li name='wrapper' head='" + rid + "' class='repeat rightRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
+                $( "<li name='wrapper' head='" + rid + "' class='repeat leftRounded'>&nbsp;&nbsp;</li>" ).insertAfter( "#newElement" );
                 newelement.attr("id",rid);
             }
             else
