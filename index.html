@@ -33,6 +33,7 @@
   <script src="./scripts/jquery-ui.js"></script>
   <script src="./scripts/jsoneditor.js"></script>
   <script src="help.json"></script>
+  <script src="./js/od.js"></script>
     <!--  <script src="../p5.min.js"></script>
     <script src="../addons/p5.dom.min.js"></script>
     <script src="../addons/p5.sound.min.js"></script>
@@ -801,7 +802,8 @@ const JavaScriptCodeGenerator =
     },
     "moveTo": function(step)
     {
-        var code = "var target = " + step.attr("params") + "; await driveTo(Params,Vars,target);";
+        //var code = "Robot.target = " + step.attr("params") + "; await driveTo(Params,Vars,Robot.target);";
+		var code = "Robot.target = " + step.attr("params") + "; await moveToOD(Params,Vars,Robot.target);";
         return code;
     },
     "moveRelative": function(step)
@@ -1424,7 +1426,8 @@ To save a task, first rename it by clicking on <b>Untitled</b> 🡑 and edit its
         }
         var Robot = {
             "tcp": {"x" : 0, "y" : 0, "z" : 0, "rx" : 0, "ry" : 0, "rz" : 0},
-            "axes": [0,0,0,0,0,0]            
+			"axes": [0,0,0,0,0,0],
+			"target": {"tcp": {"x" : 0, "y" : 0, "z" : 0, "rx" : 0, "ry" : 0, "rz" : 0}}
         };
         
         var Vars  = {
@@ -1737,6 +1740,8 @@ setInterval(setRobotVars,100);
 		
 	}
 </script>
+
+
 
 </body>
 </html>
