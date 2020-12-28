@@ -18,38 +18,70 @@ function testEllipse(x_tgt, x_upo, y_upo, x_dwno, y_dwno, b, n)
 	return test2;	
 }
 
+function evaluateArc(x_tgt,b,n)
+{
+	var old_y = 0;
+	var arc = 0;
+	for (var j=1; j<=100;j++)
+	{
+		x = j - 50;
+		y = b * Math.pow((1 - Math.pow(Math.abs(x/(x_tgt/2)),n)),(1/n));
+		if(j == 1)
+		{
+			arc = arc + Math.sqrt(y*y + 1) 
+		}
+		else
+		{
+			arc = arc + Math.sqrt((y - old_y)*(y - old_y) + 1) 
+		}
+		old_y = y;
+	}	
+	return arc;
+}
+
+
 function ellipseParams(x_tgt, x_upo, y_upo, x_dwno, y_dwno)
-{  
- 	var b = y_upo + 2;
-	
-	var n = 20;
-	
-	while(true)
-        {
-            b = b - 0.1;
-            test = testEllipse(x_tgt, x_upo, y_upo, x_dwno, y_dwno, b, n);
-            if(test > 1.001)
-            {
-                b = b + 0.5;
-                break;
-            }
-        }
+{
+	var best_b = -1;
+	var best_n = -1;
+	var best_arc = 1000000;
+ 	var n = 10;
 	
     while(true)
         {
-            n = n - 0.1
+            n = n - 0.1;
+			var b = y_upo + 10;
             
-            test = testEllipse(x_tgt, x_upo, y_upo, x_dwno, y_dwno, b, n)
-            
-            if(test > 1.001)
-            {
-                n = n + 0.1
-                break;
-            }
+            while(true)
+			{
+				b = b - 0.1;
+				test = testEllipse(x_tgt, x_upo, y_upo, x_dwno, y_dwno, b, n);
+				if(test > 1.001)
+				{
+					b = b + 0.5;
+					break;
+				}
+				else
+				{
+					var arc = evaluateArc(x_tgt,b,n);
+						if(arc < best_arc)
+						{
+							best_arc = arc;
+							best_b = b;
+							best_n = n;							
+						}
+					
+				}
+			}
+			
+			if(n < 1)
+			{
+				break;				
+			}
         }
 
         
-	return [b,n];
+	return [best_b + 0.1,best_n + 0.1];
 }
 
 function generateEllipsePoints(x_tgt,b,n)
@@ -89,23 +121,31 @@ async function moveToOD(Params, Vars, tgt)
 		var increment_y = (tgt.tcp.y - cur_y) / 101;
 		var increment_z = (tgt.tcp.z - cur_z) / 101;
 		
+		var max_z = Vars.obstacle.y_up;
+		
 		var sf = 100 / window.Vars.obstacle.dist;
 		
 		var bn = ellipseParams(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
+		
 		var points = generateEllipsePoints(100,bn[0],bn[1]);
 		
 		for(var i=0;i<points.x.length;i++)
 		{
 			var target = {tcp: {}};
 			target.tcp.x = cur_x + (i + 1) * increment_x;
-			target.tcp.y = cur_y + (i + 1) * increment_y;	
+			target.tcp.y = cur_y + (i + 1) * increment_y;
+
 			target.tcp.z = cur_z + points.y[i] + (i + 1) * increment_z;
+			//if(target.tcp.z > max_z + 10) target.tcp.z = max_z + 10;
+			
 			target.tcp.rx = cur_rx;
 			target.tcp.ry = cur_ry;
 			target.tcp.rz = cur_rz;
 			
 			await driveTo(Params, Vars, target);
 		}
+		
+		
 		
 
 }
