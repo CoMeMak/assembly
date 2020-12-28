@@ -803,7 +803,7 @@ const JavaScriptCodeGenerator =
     "moveTo": function(step)
     {
         //var code = "Robot.target = " + step.attr("params") + "; await driveTo(Params,Vars,Robot.target);";
-		var code = "Robot.target = " + step.attr("params") + "; await moveToOD(Params,Vars,Robot.target);";
+		var code = "Robot.origin = Robot.tcp; Robot.target = " + step.attr("params") + "; await moveToOD(Params,Vars,Robot.target);";
         return code;
     },
     "moveRelative": function(step)
