@@ -40,6 +40,7 @@ function evaluateArc(x_tgt,b,n)
 }
 
 
+
 function ellipseParams(x_tgt, x_upo, y_upo, x_dwno, y_dwno)
 {
 	var best_b = -1;
@@ -50,11 +51,20 @@ function ellipseParams(x_tgt, x_upo, y_upo, x_dwno, y_dwno)
     while(true)
         {
             n = n - 0.1;
-			var b = y_upo + 10;
+			if(n < 1)
+			{
+				break;				
+			}
+			var b = Math.max(y_upo, y_dwno) + 10;
             
             while(true)
 			{
 				b = b - 0.1;
+				if(b < Math.max(y_upo, y_dwno))
+				{
+					b = Math.max(y_upo, y_dwno) + 0.5;
+					break;					
+				}
 				test = testEllipse(x_tgt, x_upo, y_upo, x_dwno, y_dwno, b, n);
 				if(test > 1.001)
 				{
@@ -74,14 +84,11 @@ function ellipseParams(x_tgt, x_upo, y_upo, x_dwno, y_dwno)
 				}
 			}
 			
-			if(n < 1)
-			{
-				break;				
-			}
+			
         }
 
         
-	return [best_b + 0.1,best_n + 0.1];
+	return [best_b,best_n];
 }
 
 function generateEllipsePoints(x_tgt,b,n)
@@ -125,17 +132,43 @@ async function moveToOD(Params, Vars, tgt)
 		
 		var sf = 100 / window.Vars.obstacle.dist;
 		
+		//var points = generateEllipsePoints(100,bn[0],bn[1]);
+		var x_tgt = 100;
 		var bn = ellipseParams(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
-		
-		var points = generateEllipsePoints(100,bn[0],bn[1]);
-		
-		for(var i=0;i<points.x.length;i++)
+		for(var i=0;i<101;i++)
 		{
 			var target = {tcp: {}};
 			target.tcp.x = cur_x + (i + 1) * increment_x;
 			target.tcp.y = cur_y + (i + 1) * increment_y;
 
-			target.tcp.z = cur_z + points.y[i] + (i + 1) * increment_z;
+			
+			if(i % 10 == 0 && window.Vars.obstacle != null && Math.abs(window.Vars.obstacle.x_up - window.Vars.obstacle.x_down) > 0.01)
+			{
+				var bn1 = ellipseParams(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
+				if(bn1[0] > bn[0])
+				{
+					bn = bn1;					
+				}
+			}
+
+			var x = i - 50;
+			var b = bn[0];
+			var n = bn[1];
+			//if(b < 0 || Math.abs(window.Vars.obstacle.x_up - window.Vars.obstacle.x_down) < 0.01)
+			//{
+			//	console.log(b + " - " + n);
+			//	ellipseParams(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
+			//}
+			
+			var y = b * Math.pow((1 - Math.pow(Math.abs(x/(x_tgt/2)),n)),(1/n));
+			if(i < 100) 
+			{
+				target.tcp.z = cur_z + y + (i + 1) * increment_z + 5;
+			}
+			else
+			{
+				target.tcp.z = cur_z + y + (i + 1) * increment_z;				
+			}
 			//if(target.tcp.z > max_z + 10) target.tcp.z = max_z + 10;
 			
 			target.tcp.rx = cur_rx;
@@ -145,7 +178,7 @@ async function moveToOD(Params, Vars, tgt)
 			await driveTo(Params, Vars, target);
 		}
 		
-		
+		Robot.origin = null;
 		
 
 }

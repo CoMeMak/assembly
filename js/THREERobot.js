@@ -40,23 +40,37 @@ const THREERobot = function (V_initial, limits, scene) {
 	var sceneObjects = [];
 	
 	var arrowHelper = null;
+	var box = null;
 	function projectObstacle()
 	{
+		if(box != null)
+		{			
+			scene.remove(box);
+			scene.remove(obstacle);
+		}
 		
-		var bbox = new THREE.Box3().setFromObject(window.obstacle);
+		obstacle.rotateZ(0.0005);
+		obstacle.rotateY(0.0005);
+		scene.add(obstacle);
+		box = new THREE.BoxHelper( obstacle, 0xffff00 );
+		scene.add( box );	
 		
-		var tcp = new THREE.Vector3( Robot.tcp.x / 100, Robot.tcp.y / 100, (Robot.tcp.z - 160) / 100); 
+		if(Robot.origin == null) return;
+		
+		var bbox = new THREE.Box3().setFromObject(obstacle);
+		
+		var origin = new THREE.Vector3( Robot.origin.x / 100, Robot.origin.y / 100, (Robot.origin.z - 80) / 100); 
 		var target = new THREE.Vector3(Robot.target.tcp.x / 100, Robot.target.tcp.y / 100, Robot.target.tcp.z / 100);
 		
 		
 		var dir = new THREE.Vector3(); // create once an reuse it
-		dir.subVectors( target, tcp ).normalize();
+		dir.subVectors( target, origin ).normalize();
 		
 		var dir2 = new THREE.Vector3(); // create once an reuse it
-		dir2.subVectors( tcp, target ).normalize();
+		dir2.subVectors( origin, target ).normalize();
 		
 		
-		var ray = new THREE.Ray(tcp,dir);
+		var ray = new THREE.Ray(origin,dir);
 		var ray2 = new THREE.Ray(target,dir2);
 		
 		if(arrowHelper != null)
@@ -65,31 +79,34 @@ const THREERobot = function (V_initial, limits, scene) {
 		}		
 		
 		
-		arrowHelper = new THREE.ArrowHelper( dir, tcp, 4, 0xffff00 );
+		arrowHelper = new THREE.ArrowHelper( dir, origin, 4, 0xffff00 );
 		scene.add( arrowHelper );
 		
 		intersection = ray.intersectBox(bbox);
 		intersection2 = ray2.intersectBox(bbox);
+		//intersection.z +=  0.8;
+		//intersection2.z +=  0.8;
 		if(intersection != null)
 		{
 			var corners = [
 				//new THREE.Vector3(bbox.min.x, bbox.min.y, bbox.min.z),
-				new THREE.Vector3(bbox.min.x, bbox.min.y, bbox.max.z),
-				new THREE.Vector3(bbox.min.x, bbox.max.y, bbox.max.z),
+				new THREE.Vector3(bbox.min.x, bbox.min.y, bbox.max.z + 0.8),
+				new THREE.Vector3(bbox.min.x, bbox.max.y, bbox.max.z + 0.8),
 				//new THREE.Vector3(bbox.min.x, bbox.max.y, bbox.min.z),
-				new THREE.Vector3(bbox.max.x, bbox.max.y, bbox.max.z),
-				new THREE.Vector3(bbox.max.x, bbox.min.y, bbox.max.z),
+				new THREE.Vector3(bbox.max.x, bbox.max.y, bbox.max.z + 0.8),
+				new THREE.Vector3(bbox.max.x, bbox.min.y, bbox.max.z + 0.8),
 				//new THREE.Vector3(bbox.max.x, bbox.min.y, bbox.min.z),
 				//new THREE.Vector3(bbox.max.x, bbox.max.y, bbox.min.z)
 			];
-			console.log(tcp);
-			console.log(target);
+			//console.log(origin);
+			//console.log(target);
 			Vars.obstacle = {};
-			Vars.obstacle.x_up = tcp.distanceTo(intersection) * 100;
+			Vars.obstacle.x_up = origin.distanceTo(intersection) * 100;
 			Vars.obstacle.y_up = (corners[0].z - intersection.z)  * 100;
-			Vars.obstacle.x_down = tcp.distanceTo(intersection2)  * 100;
+			Vars.obstacle.x_down = origin.distanceTo(intersection2)  * 100;
 			Vars.obstacle.y_down = (corners[3].z - intersection2.z)  * 100;
-			Vars.obstacle.dist = tcp.distanceTo(target) * 100;
+			Vars.obstacle.dist = origin.distanceTo(target) * 100;
+			
 		}
 		else
 		{
@@ -97,20 +114,15 @@ const THREERobot = function (V_initial, limits, scene) {
 		}
 	}
 	
+	var obstacle = null;
 	function createObstacle()
 	{
-		var mat = new THREE.MeshBasicMaterial({color: 0x808080});
-		var geometry = new THREE.BoxGeometry(2, 2, 2);
-		var cube = new THREE.Mesh(geometry, mat);
-		cube.position.set(5,0,0.2);
-		cube.rotateZ(0.3);
-		
-		scene.add(cube);
-		
-		window.obstacle = cube;		
-		
-		const box = new THREE.BoxHelper( cube, 0xffff00 );
-		scene.add( box );		
+		var mat = new THREE.MeshBasicMaterial({color: 0x800000});
+		var geometry = new THREE.BoxGeometry(2, 3, 2);
+		obstacle = new THREE.Mesh(geometry, mat);
+		obstacle.position.set(5,0,0.2);
+		obstacle.rotateZ(0.3);
+		//scene.add(obstacle);		
 	}
 	
 	function createObjects()
@@ -131,7 +143,7 @@ const THREERobot = function (V_initial, limits, scene) {
 		sceneObjects.push({o:cube,d:2.7});
 		
 		createObstacle();
-		
+		setInterval(moveObjects,10);
 	}
 	
 	function moveObjects()
@@ -209,7 +221,7 @@ const THREERobot = function (V_initial, limits, scene) {
 	  
 	  
 	  createObjects();
-	  setInterval(moveObjects,10);
+	  
 
 	
 	
