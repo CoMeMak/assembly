@@ -133,17 +133,17 @@ function norm(x)
 }
 var good_cnt = 0;
 var bad_cnt = 0;
-function getBN(sf)
+function getBN(sf,x_tgt)
 {
 	var input = [norm(window.Vars.obstacle.x_up * sf), norm(window.Vars.obstacle.y_up * sf), norm(window.Vars.obstacle.x_down * sf), norm(window.Vars.obstacle.y_down * sf)];
 	var bn = net.run(input);
 	bn[0] = dn(bn[0]) / sf;
 	bn[1] = dn(bn[1]);
-	var test = testEllipse(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down, bn[0], bn[1]);	
+	var test = testEllipse(x_tgt, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down, bn[0], bn[1]);	
 	if(test > 1)
 	{
 		console.log(test);
-		bn = ellipseParams(100, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
+		bn = ellipseParams(x_tgt, window.Vars.obstacle.x_up * sf, window.Vars.obstacle.y_up, window.Vars.obstacle.x_down * sf, window.Vars.obstacle.y_down);
 		bad_cnt++;
 	}
 	else
@@ -180,19 +180,27 @@ async function moveToOD(Params, Vars, tgt)
 		//var points = generateEllipsePoints(100,bn[0],bn[1]);
 		var x_tgt = 100;
 		
-		var bn = getBN(sf);
+		var bn = getBN(sf,x_tgt);
+		
 		for(var i=0;i<101;i++)
 		{
 			var target = {tcp: {}};
 			target.tcp.x = cur_x + (i + 1) * increment_x;
 			target.tcp.y = cur_y + (i + 1) * increment_y;
 
+			var bnChanged = false;
 			if(window.Vars.obstacle != null && Math.abs(window.Vars.obstacle.x_up - window.Vars.obstacle.x_down) > 0.01)
 			{
-				var bn1 = getBN(sf);
-				if(bn1[0] > bn[0] || bn1[1] > bn[1])
+				var bn1 = getBN(sf,x_tgt);
+				if(bn1[0] > bn[0])
 				{
-					bn = bn1;					
+					bn[0] = bn1[0];		
+					bnChanged = true;
+				}
+				if(bn1[1] > bn[1])
+				{
+					bn[1] = bn1[1];		
+					bnChanged = true;
 				}
 			}
 
@@ -210,6 +218,7 @@ async function moveToOD(Params, Vars, tgt)
 			target.tcp.rz = cur_rz;
 			
 			await driveTo(Params, Vars, target);
+			
 		}
 		
 		Robot.origin = null;
