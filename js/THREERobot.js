@@ -51,6 +51,7 @@ const THREERobot = function (V_initial, limits, scene) {
 		
 		obstacle.rotateZ(0.0005);
 		obstacle.rotateY(0.0005);
+		obstacle.rotateX(-0.0005);
 		scene.add(obstacle);
 		box = new THREE.BoxHelper( obstacle, 0xffff00 );
 		scene.add( box );	
