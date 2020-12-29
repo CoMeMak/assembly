@@ -33,6 +33,7 @@
   <script src="./scripts/jquery-ui.js"></script>
   <script src="./scripts/jsoneditor.js"></script>
   <script src="help.json"></script>
+  <script src="https://unpkg.com/brain.js"></script>
   <script src="./js/od.js"></script>
     <!--  <script src="../p5.min.js"></script>
     <script src="../addons/p5.dom.min.js"></script>
@@ -657,7 +658,7 @@ function driveTo(Params,Vars,target)
 {
   return new Promise(resolve => {
     var moving = -1;
-    var step = 10;
+    var step = 30;
     if(!$("#robot_connected").is(":checked"))
     {
         var move = function()
