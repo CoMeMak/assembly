@@ -49,9 +49,10 @@ const THREERobot = function (V_initial, limits, scene) {
 			scene.remove(obstacle);
 		}
 		
-		obstacle.rotateZ(0.0005);
-		obstacle.rotateY(0.0005);
-		obstacle.rotateX(-0.0005);
+		//obstacle.rotateZ(0.00002);
+		//obstacle.rotateY(0.00002);
+		//obstacle.rotateX(0.00002);
+		
 		scene.add(obstacle);
 		box = new THREE.BoxHelper( obstacle, 0xffff00 );
 		scene.add( box );	
@@ -60,8 +61,8 @@ const THREERobot = function (V_initial, limits, scene) {
 		
 		var bbox = new THREE.Box3().setFromObject(obstacle);
 		
-		var origin = new THREE.Vector3( Robot.origin.x / 100, Robot.origin.y / 100, (Robot.origin.z - 80) / 100); 
-		var target = new THREE.Vector3(Robot.target.tcp.x / 100, Robot.target.tcp.y / 100, Robot.target.tcp.z / 100);
+		var origin = new THREE.Vector3(Robot.origin.x / 100, Robot.origin.y / 100, (Robot.origin.z - 80) / 100); 
+		var target = new THREE.Vector3(Robot.target.tcp.x / 100, Robot.target.tcp.y / 100, (Robot.target.tcp.z - 80) / 100);
 		
 		
 		var dir = new THREE.Vector3(); // create once an reuse it
@@ -102,37 +103,75 @@ const THREERobot = function (V_initial, limits, scene) {
 			//console.log(origin);
 			//console.log(target);
 			Vars.obstacle = {};
+			
+			var sin_alpha = Math.abs(target.z - origin.z) / origin.distanceTo(target);
+			
 			Vars.obstacle.x_up = origin.distanceTo(intersection) * 100;
-			Vars.obstacle.y_up = (corners[0].z - intersection.z)  * 100;
+			
+			
+			
+			var p = new THREE.Vector3(intersection.x,intersection.y,intersection.z);
+			while(bbox.containsPoint(p))
+			{
+				p.z += 0.01;
+			}
+			if(origin.z > target.z) Vars.obstacle.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
+			//Vars.obstacle.y_up = (corners[0].z - intersection.z)  * 100;
+			Vars.obstacle.y_up = (p.z - intersection.z)  * 100;
 			Vars.obstacle.x_down = origin.distanceTo(intersection2)  * 100;
-			Vars.obstacle.y_down = (corners[3].z - intersection2.z)  * 100;
+			
+			p = new THREE.Vector3(intersection2.x,intersection2.y,intersection2.z);
+			while(bbox.containsPoint(p))
+			{
+				p.z += 0.01;
+			}
+			
+			if(origin.z < target.z) Vars.obstacle.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
+			Vars.obstacle.y_down = (p.z - intersection2.z)  * 100;
 			Vars.obstacle.dist = origin.distanceTo(target) * 100;
 			
 		}
 		else
 		{
 			Vars.obstacle = null;			
+			
 		}
 	}
 	
 	var obstacle = null;
 	function createObstacle()
 	{
-		var mat = new THREE.MeshBasicMaterial({color: 0x800000});
-		var geometry = new THREE.BoxGeometry(2, 3, 2);
+		window.scene = scene;
+		var mat = new THREE.MeshLambertMaterial({
+				color: 0x5D6D7E,
+				emissive: 0x2a2a2a,
+				emissiveIntensity: .5,
+				side: THREE.DoubleSide
+		});
+		var geometry = new THREE.BoxGeometry(1, 3, 2);
 		obstacle = new THREE.Mesh(geometry, mat);
-		obstacle.position.set(5,0,0.2);
+		obstacle.position.set(4,3,1);
 		obstacle.rotateZ(0.3);
 		//scene.add(obstacle);		
 	}
 	
+	
 	function createObjects()
 	{
 		
-		var mat = new THREE.MeshBasicMaterial({color: 0x73B0F5});
+		var mat = new THREE.MeshLambertMaterial({
+				color: 0x73B0F5,
+				emissive: 0x2a2a2a,
+				emissiveIntensity: .5,
+				side: THREE.DoubleSide
+		});
+		
+		
 		var geometry = new THREE.BoxGeometry(0.01, 0.01, 0.01);
 		var cube = new THREE.Mesh(geometry, mat);
-		cube.position.set(3,3,-1.6);
+
+		
+		cube.position.set(-3,-3,-1.6);
 		
 		geometry = new THREE.BoxGeometry(1, 1, 1);
 		var cube2 = new THREE.Mesh(geometry, mat);
@@ -144,12 +183,15 @@ const THREERobot = function (V_initial, limits, scene) {
 		sceneObjects.push({o:cube,d:2.7});
 		
 		createObstacle();
+		
 		setInterval(moveObjects,10);
 	}
+	
 	
 	function moveObjects()
 	{
 		projectObstacle();
+		
 		for(var i=0;i<sceneObjects.length;i++)
 		{
 			var obj = sceneObjects[i];
@@ -172,7 +214,6 @@ const THREERobot = function (V_initial, limits, scene) {
 				obj.o.position.setZ(-1.6);	
 			}
 			Vars.cubelet = {x: obj.o.position.x * 100, y: obj.o.position.y * 100, z: obj.o.position.z * 100};
-			
 		}			
 	}
 

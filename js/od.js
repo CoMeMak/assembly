@@ -135,6 +135,7 @@ var good_cnt = 0;
 var bad_cnt = 0;
 function getBN(sf,x_tgt)
 {
+	
 	var input = [norm(window.Vars.obstacle.x_up * sf), norm(window.Vars.obstacle.y_up * sf), norm(window.Vars.obstacle.x_down * sf), norm(window.Vars.obstacle.y_down * sf)];
 	var bn = net.run(input);
 	bn[0] = dn(bn[0]) / sf;
@@ -154,6 +155,13 @@ function getBN(sf,x_tgt)
 	return bn;
 }
 
+var total_path = 0;
+function tallyPath(orig, tgt)
+{
+	total_path += Math.sqrt(Math.pow((tgt.x - orig.x),2) + Math.pow((tgt.y - orig.y),2) + Math.pow((tgt.z - orig.z),2));
+}
+
+var total_time = 0;
 async function moveToOD(Params, Vars, tgt)
 {
 	await timeout(50);
@@ -162,6 +170,14 @@ async function moveToOD(Params, Vars, tgt)
 			await driveTo(Params, Vars, tgt);
 			return;		
 		}
+		
+		
+
+		var pointCloud = null;
+		
+		var d = new Date();
+		var start_time = d.getTime();
+
 		var cur_x = parseFloat($("#x").val() + "");
 		var cur_y = parseFloat($("#y").val() + "");
 		var cur_z = parseFloat($("#z").val() + "");
@@ -181,6 +197,8 @@ async function moveToOD(Params, Vars, tgt)
 		var x_tgt = 100;
 		
 		var bn = getBN(sf,x_tgt);
+		
+		var points = [];
 		
 		for(var i=0;i<101;i++)
 		{
@@ -212,16 +230,41 @@ async function moveToOD(Params, Vars, tgt)
 			
 			target.tcp.z = cur_z + ey + (i + 1) * increment_z;
 			
-			
 			target.tcp.rx = cur_rx;
 			target.tcp.ry = cur_ry;
 			target.tcp.rz = cur_rz;
 			
-			await driveTo(Params, Vars, target);
+			tallyPath(Robot.tcp,target.tcp);
 			
-		}
+			const material = new THREE.MeshBasicMaterial( {color: 0x000000} );
+			var geometry = new THREE.SphereGeometry( 0.02, 0.02, 0.02 );
+			var sphere = new THREE.Mesh( geometry, material );
+			sphere.position.set(target.tcp.x / 100,target.tcp.y / 100,(target.tcp.z - 80) / 100);
+			window.scene.add( sphere );
+			points.push(sphere);
+			
+			if(i < 100) 
+			{
+				await driveTo(Params, Vars, target);
+			}
+			else
+			{
+				await driveTo(Params, Vars, tgt);
+			}
+			
+		}		
+		
 		
 		Robot.origin = null;
-		
+		var pnts = [...points];
+		setTimeout(function() {
+			for(var i=0; i<pnts.length; i++)
+			{
+				window.scene.remove(pnts[i]);
+			}
+		}, 5000);
+		var d = new Date();
+		var stop_time = d.getTime();
+		total_time += stop_time - start_time;
 
 }
