@@ -34,7 +34,7 @@
   <script src="./scripts/jsoneditor.js"></script>
   <script src="help.json"></script>
   <script src="https://unpkg.com/brain.js"></script>
-  <script src="./js/od.js"></script>
+  
     <!--  <script src="../p5.min.js"></script>
     <script src="../addons/p5.dom.min.js"></script>
     <script src="../addons/p5.sound.min.js"></script>
@@ -64,6 +64,7 @@
   <script src="js/ace.js" type="text/javascript" charset="utf-8"></script>
   <script src="js/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
   <script src="js/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/od.js"></script>
   
   
   <link href="css/main.css" rel="stylesheet" />
@@ -658,7 +659,7 @@ function driveTo(Params,Vars,target)
 {
   return new Promise(resolve => {
     var moving = -1;
-    var step = 30;
+    var step = 20;
     if(!$("#robot_connected").is(":checked"))
     {
         var move = function()
@@ -804,7 +805,7 @@ const JavaScriptCodeGenerator =
     "moveTo": function(step)
     {
         //var code = "Robot.target = " + step.attr("params") + "; await driveTo(Params,Vars,Robot.target);";
-		var code = "Robot.origin = Robot.tcp; Robot.target = " + step.attr("params") + "; await moveToOD(Params,Vars,Robot.target);";
+		var code = "Robot.origin = JSON.parse(JSON.stringify(Robot.tcp)); Robot.target = " + step.attr("params") + "; await moveToOD(Params,Vars,Robot.target);";
         return code;
     },
     "moveRelative": function(step)
