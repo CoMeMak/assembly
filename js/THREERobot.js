@@ -49,9 +49,9 @@ const THREERobot = function (V_initial, limits, scene) {
 			scene.remove(obstacle);
 		}
 		
-		//obstacle.rotateZ(0.00002);
-		//obstacle.rotateY(0.00002);
-		//obstacle.rotateX(0.00002);
+		obstacle.rotateZ(0.0002);
+		obstacle.rotateY(0.0002);
+		obstacle.rotateX(0.0002);
 		
 		scene.add(obstacle);
 		box = new THREE.BoxHelper( obstacle, 0xffff00 );
@@ -81,7 +81,8 @@ const THREERobot = function (V_initial, limits, scene) {
 		}		
 		
 		
-		arrowHelper = new THREE.ArrowHelper( dir, origin, 4, 0xffff00 );
+		arrowHelper = new THREE.ArrowHelper( dir, origin, origin.distanceTo(target), 0xc0c0c0 );
+		arrowHelper.setLength(origin.distanceTo(target), 0.4, 0.2);
 		scene.add( arrowHelper );
 		
 		intersection = ray.intersectBox(bbox);
@@ -108,27 +109,20 @@ const THREERobot = function (V_initial, limits, scene) {
 			
 			Vars.obstacle.x_up = origin.distanceTo(intersection) * 100;
 			
-			
-			
-			var p = new THREE.Vector3(intersection.x,intersection.y,intersection.z);
-			while(bbox.containsPoint(p))
-			{
-				p.z += 0.01;
-			}
+			var p = {z: bbox.max.z};
 			if(origin.z > target.z) Vars.obstacle.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
-			//Vars.obstacle.y_up = (corners[0].z - intersection.z)  * 100;
+			
 			Vars.obstacle.y_up = (p.z - intersection.z)  * 100;
 			Vars.obstacle.x_down = origin.distanceTo(intersection2)  * 100;
-			
-			p = new THREE.Vector3(intersection2.x,intersection2.y,intersection2.z);
-			while(bbox.containsPoint(p))
-			{
-				p.z += 0.01;
-			}
 			
 			if(origin.z < target.z) Vars.obstacle.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
 			Vars.obstacle.y_down = (p.z - intersection2.z)  * 100;
 			Vars.obstacle.dist = origin.distanceTo(target) * 100;
+			
+			if(Vars.obstacle.y_down < 0 || Vars.obstacle.y_up < 0)
+			{
+				console.log("cacat");
+			}
 			
 		}
 		else
@@ -148,7 +142,7 @@ const THREERobot = function (V_initial, limits, scene) {
 				emissiveIntensity: .5,
 				side: THREE.DoubleSide
 		});
-		var geometry = new THREE.BoxGeometry(1, 3, 2);
+		var geometry = new THREE.BoxGeometry(1, 4, 3);
 		obstacle = new THREE.Mesh(geometry, mat);
 		obstacle.position.set(4,3,1);
 		obstacle.rotateZ(0.3);
