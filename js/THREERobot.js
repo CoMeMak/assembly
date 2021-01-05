@@ -91,38 +91,28 @@ const THREERobot = function (V_initial, limits, scene) {
 		//intersection2.z +=  0.8;
 		if(intersection != null)
 		{
-			var corners = [
-				//new THREE.Vector3(bbox.min.x, bbox.min.y, bbox.min.z),
-				new THREE.Vector3(bbox.min.x, bbox.min.y, bbox.max.z + 0.8),
-				new THREE.Vector3(bbox.min.x, bbox.max.y, bbox.max.z + 0.8),
-				//new THREE.Vector3(bbox.min.x, bbox.max.y, bbox.min.z),
-				new THREE.Vector3(bbox.max.x, bbox.max.y, bbox.max.z + 0.8),
-				new THREE.Vector3(bbox.max.x, bbox.min.y, bbox.max.z + 0.8),
-				//new THREE.Vector3(bbox.max.x, bbox.min.y, bbox.min.z),
-				//new THREE.Vector3(bbox.max.x, bbox.max.y, bbox.min.z)
-			];
-			//console.log(origin);
-			//console.log(target);
-			Vars.obstacle = {};
-			
+			var obst = {};
 			var sin_alpha = Math.abs(target.z - origin.z) / origin.distanceTo(target);
+			var cos_alpha = Math.sqrt(Math.pow(target.x - origin.x,2) + Math.pow(target.y - origin.y,2)) / origin.distanceTo(target);
 			
-			Vars.obstacle.x_up = origin.distanceTo(intersection) * 100;
+			obst.x_up = origin.distanceTo(intersection) * 100;
 			
 			var p = {z: bbox.max.z};
-			if(origin.z > target.z) Vars.obstacle.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
+			if(origin.z > target.z) obst.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
 			
-			Vars.obstacle.y_up = (p.z - intersection.z)  * 100;
-			Vars.obstacle.x_down = origin.distanceTo(intersection2)  * 100;
+			obst.y_up = cos_alpha * (p.z - intersection.z)  * 100;
+			obst.x_down = origin.distanceTo(intersection2)  * 100;
 			
-			if(origin.z < target.z) Vars.obstacle.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
-			Vars.obstacle.y_down = (p.z - intersection2.z)  * 100;
-			Vars.obstacle.dist = origin.distanceTo(target) * 100;
+			if(origin.z < target.z) obst.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
+			obst.y_down = cos_alpha * (p.z - intersection2.z)  * 100;
+			obst.dist = origin.distanceTo(target) * 100;
 			
-			if(Vars.obstacle.y_down < 0 || Vars.obstacle.y_up < 0)
+			//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
+			if(obst.x_up < obst.x_down)
 			{
-				console.log("cacat");
+				Vars.obstacle = obst;
 			}
+			
 			
 		}
 		else
