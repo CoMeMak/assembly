@@ -41,6 +41,9 @@ const THREERobot = function (V_initial, limits, scene) {
 	
 	var arrowHelper = null;
 	var box = null;
+	
+	var xing1 = null;
+	var xing2 = null;
 	function projectObstacle()
 	{
 		if(box != null)
@@ -59,36 +62,33 @@ const THREERobot = function (V_initial, limits, scene) {
 		
 		if(Robot.origin == null) return;
 		
-		var bbox = new THREE.Box3().setFromObject(obstacle);
+		var bbox = new THREE.Box3().setFromObject(box);
 		
 		var origin = new THREE.Vector3(Robot.origin.x / 100, Robot.origin.y / 100, (Robot.origin.z - 80) / 100); 
 		var target = new THREE.Vector3(Robot.target.tcp.x / 100, Robot.target.tcp.y / 100, (Robot.target.tcp.z - 80) / 100);
 		
 		
 		var dir = new THREE.Vector3(); // create once an reuse it
-		dir.subVectors( target, origin ).normalize();
+		dir = dir.subVectors( target, origin ).normalize();
 		
 		var dir2 = new THREE.Vector3(); // create once an reuse it
-		dir2.subVectors( origin, target ).normalize();
+		dir2 = dir2.subVectors( origin, target ).normalize();
 		
 		
 		var ray = new THREE.Ray(origin,dir);
 		var ray2 = new THREE.Ray(target,dir2);
-		
-		if(arrowHelper != null)
-		{
-			scene.remove(arrowHelper);
-		}		
-		
-		
-		arrowHelper = new THREE.ArrowHelper( dir, origin, origin.distanceTo(target), 0xc0c0c0 );
-		arrowHelper.setLength(origin.distanceTo(target), 0.4, 0.2);
-		scene.add( arrowHelper );
-		
-		intersection = ray.intersectBox(bbox);
-		intersection2 = ray2.intersectBox(bbox);
+		bbox.min.z = -10;
+		var intersection = ray.intersectBox(bbox);
+		var intersection2 = ray2.intersectBox(bbox);
 		//intersection.z +=  0.8;
 		//intersection2.z +=  0.8;
+		
+		if(xing1 != null)
+			{
+				scene.remove(xing1);
+				scene.remove(xing2);
+			}
+		
 		if(intersection != null)
 		{
 			var obst = {};
@@ -101,10 +101,12 @@ const THREERobot = function (V_initial, limits, scene) {
 			if(origin.z > target.z) obst.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
 			
 			obst.y_up = cos_alpha * (p.z - intersection.z)  * 100;
+
 			obst.x_down = origin.distanceTo(intersection2)  * 100;
-			
 			if(origin.z < target.z) obst.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
+
 			obst.y_down = cos_alpha * (p.z - intersection2.z)  * 100;
+			
 			obst.dist = origin.distanceTo(target) * 100;
 			
 			//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
@@ -112,7 +114,29 @@ const THREERobot = function (V_initial, limits, scene) {
 			{
 				Vars.obstacle = obst;
 			}
+			else
+			{
+				alert(obst.x_up + "<" + obst.x_down);
+			}
 			
+			const material = new THREE.MeshBasicMaterial( {color: 0xFF0000} );
+			var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
+			xing1 = new THREE.Mesh( geometry, material );
+			xing2 = new THREE.Mesh( geometry, material );
+			xing1.position.set(intersection.x,intersection.y,p.z);
+			xing2.position.set(intersection2.x,intersection2.y,p.z);
+			window.scene.add( xing1 );
+			window.scene.add( xing2 );
+			
+			if(arrowHelper != null)
+			{
+				scene.remove(arrowHelper);
+			}		
+			
+			
+			arrowHelper = new THREE.ArrowHelper( dir, origin, obst.dist / 100, 0xc0c0c0 );
+			arrowHelper.setLength(obst.dist / 100, 0.4, 0.2);
+			scene.add( arrowHelper );
 			
 		}
 		else
@@ -155,7 +179,7 @@ const THREERobot = function (V_initial, limits, scene) {
 		var cube = new THREE.Mesh(geometry, mat);
 
 		
-		cube.position.set(-3,-3,-1.6);
+		cube.position.set(-3,-7,-1.6);
 		
 		geometry = new THREE.BoxGeometry(1, 1, 1);
 		var cube2 = new THREE.Mesh(geometry, mat);
