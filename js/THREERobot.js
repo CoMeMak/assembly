@@ -46,19 +46,20 @@ const THREERobot = function (V_initial, limits, scene) {
 	var xing2 = null;
 	function projectObstacle()
 	{
-		if(box != null)
-		{			
-			scene.remove(box);
-			scene.remove(obstacle);
-		}
+		obstacle.rotateZ(0.0004);
+		obstacle.rotateY(0.0004);
+		obstacle.rotateX(0.0004);
 		
-		obstacle.rotateZ(0.0002);
-		obstacle.rotateY(0.0002);
-		obstacle.rotateX(0.0002);
+		if(box == null)
+		{
+			scene.add(obstacle);
+			box = new THREE.BoxHelper( obstacle, 0xffff00 );
+			scene.add( box );
+		}		
 		
-		scene.add(obstacle);
-		box = new THREE.BoxHelper( obstacle, 0xffff00 );
-		scene.add( box );	
+		box.update(obstacle);
+		//renderer.render( scene, camera );
+			
 		
 		if(Robot.origin == null) return;
 		
@@ -158,9 +159,11 @@ const THREERobot = function (V_initial, limits, scene) {
 		});
 		var geometry = new THREE.BoxGeometry(1, 4, 3);
 		obstacle = new THREE.Mesh(geometry, mat);
-		obstacle.position.set(4,3,1);
+		obstacle.position.set(3,2.7,1);
 		obstacle.rotateZ(0.3);
+		
 		//scene.add(obstacle);		
+		
 	}
 	
 	
