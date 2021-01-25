@@ -44,22 +44,34 @@ const THREERobot = function (V_initial, limits, scene) {
 	
 	var xing1 = null;
 	var xing2 = null;
+	window.rotateObstacle = true;
 	function projectObstacle()
 	{
-		obstacle.rotateZ(0.0004);
-		obstacle.rotateY(0.0004);
-		obstacle.rotateX(0.0004);
-		
+		//if(!window.rotateObstacle) return;
+		scene.add(obstacle);
 		if(box == null)
 		{
+			var mat = new THREE.MeshLambertMaterial({
+				color: 0x5D6D7E,
+				emissive: 0x2a2a2a,
+				emissiveIntensity: .5,
+				side: THREE.DoubleSide
+			});
+			var geometry = new THREE.BoxGeometry(1, 4, 3);
+			obstacle = new THREE.Mesh(geometry, mat);
+			obstacle.position.set(3,2.7,1);
+			
 			scene.add(obstacle);
+			
 			box = new THREE.BoxHelper( obstacle, 0xffff00 );
-			scene.add( box );
+			scene.add( box );						
 		}		
 		
+		obstacle = obstacle.rotateZ(0.0004);
+		obstacle = obstacle.rotateY(0.0004);
+		obstacle = obstacle.rotateX(0.0004);
+		
 		box.update(obstacle);
-		//renderer.render( scene, camera );
-			
 		
 		if(Robot.origin == null) return;
 		
@@ -84,12 +96,6 @@ const THREERobot = function (V_initial, limits, scene) {
 		//intersection.z +=  0.8;
 		//intersection2.z +=  0.8;
 		
-		if(xing1 != null)
-			{
-				scene.remove(xing1);
-				scene.remove(xing2);
-			}
-		
 		if(intersection != null)
 		{
 			var obst = {};
@@ -110,6 +116,8 @@ const THREERobot = function (V_initial, limits, scene) {
 			
 			obst.dist = origin.distanceTo(target) * 100;
 			
+			obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
+			
 			//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
 			if(obst.x_up < obst.x_down)
 			{
@@ -122,18 +130,21 @@ const THREERobot = function (V_initial, limits, scene) {
 			
 			const material = new THREE.MeshBasicMaterial( {color: 0xFF0000} );
 			var geometry = new THREE.SphereGeometry( 0.05, 0.05, 0.05 );
-			xing1 = new THREE.Mesh( geometry, material );
-			xing2 = new THREE.Mesh( geometry, material );
+			if(xing1 == null)
+			{
+				xing1 = new THREE.Mesh( geometry, material );
+				xing2 = new THREE.Mesh( geometry, material );
+				scene.add( xing1 );
+				scene.add( xing2 );
+			}
+			
 			xing1.position.set(intersection.x,intersection.y,p.z);
-			xing2.position.set(intersection2.x,intersection2.y,p.z);
-			window.scene.add( xing1 );
-			window.scene.add( xing2 );
+			xing2.position.set(intersection2.x,intersection2.y,p.z);			
 			
 			if(arrowHelper != null)
 			{
 				scene.remove(arrowHelper);
-			}		
-			
+			}
 			
 			arrowHelper = new THREE.ArrowHelper( dir, origin, obst.dist / 100, 0xc0c0c0 );
 			arrowHelper.setLength(obst.dist / 100, 0.4, 0.2);
@@ -142,34 +153,15 @@ const THREERobot = function (V_initial, limits, scene) {
 		}
 		else
 		{
-			Vars.obstacle = null;			
-			
-		}
+			Vars.obstacle = null;						
+		}		
 	}
 	
 	var obstacle = null;
-	function createObstacle()
-	{
-		window.scene = scene;
-		var mat = new THREE.MeshLambertMaterial({
-				color: 0x5D6D7E,
-				emissive: 0x2a2a2a,
-				emissiveIntensity: .5,
-				side: THREE.DoubleSide
-		});
-		var geometry = new THREE.BoxGeometry(1, 4, 3);
-		obstacle = new THREE.Mesh(geometry, mat);
-		obstacle.position.set(3,2.7,1);
-		obstacle.rotateZ(0.3);
-		
-		//scene.add(obstacle);		
-		
-	}
-	
 	
 	function createObjects()
 	{
-		
+		window.scene = scene;
 		var mat = new THREE.MeshLambertMaterial({
 				color: 0x73B0F5,
 				emissive: 0x2a2a2a,
@@ -193,9 +185,10 @@ const THREERobot = function (V_initial, limits, scene) {
 		scene.add(cube);
 		sceneObjects.push({o:cube,d:2.7});
 		
-		createObstacle();
 		
-		setInterval(moveObjects,10);
+		
+		//moveObjects();
+		moveObjects();
 	}
 	
 	
@@ -226,6 +219,8 @@ const THREERobot = function (V_initial, limits, scene) {
 			}
 			Vars.cubelet = {x: obj.o.position.x * 100, y: obj.o.position.y * 100, z: obj.o.position.z * 100};
 		}			
+		
+		setTimeout(moveObjects,10);
 	}
 
   function createCube(x, y, z, w, h, d, min, max, jointNumber) {
