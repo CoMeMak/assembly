@@ -45,9 +45,15 @@ const THREERobot = function (V_initial, limits, scene) {
 	var xing1 = null;
 	var xing2 = null;
 	window.rotateObstacle = true;
+	
+	var t = 0, dt = 0.0005, a = {x: 3, y: 3, z: 1}, b = {x: 4.5, y: 0.3, z: 1.5};
+	function lerp(a, b, t) {return a + (b - a) * t}
+	function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
+	
 	function projectObstacle()
 	{
 		//if(!window.rotateObstacle) return;
+		//obstacleCount++;
 		scene.add(obstacle);
 		if(box == null)
 		{
@@ -57,16 +63,35 @@ const THREERobot = function (V_initial, limits, scene) {
 				emissiveIntensity: .5,
 				side: THREE.DoubleSide
 			});
-			var geometry = new THREE.BoxGeometry(1, 4, 3);
+			var geometry = new THREE.BoxGeometry(1, 1, 1);
 			obstacle = new THREE.Mesh(geometry, mat);
-			obstacle.position.set(3,2.7,1);
-			
+			obstacle.position.set(3,3,1);
 			scene.add(obstacle);
 			
 			box = new THREE.BoxHelper( obstacle, 0xffff00 );
 			scene.add( box );						
 		}		
 		
+		obstacle.scale.set(1.5, 4.5, 2.5);
+		
+		var newX = lerp(a.x, b.x, ease(t));   // interpolate between a and b where
+		var newY = lerp(a.y, b.y, ease(t));   // t is first passed through a easing
+		var newZ = lerp(a.z, b.z, ease(t));   // function in this example.
+		obstacle.position.set(newX, newY, newZ);  // set new position
+		t += dt;
+		if (t <= 0 || t >=1) dt = -dt; 
+		
+		/*
+		if(obstacleCount < 500)
+		{
+			obstacle.position.set(3,3,1);
+		}
+		else
+		{
+			obstacle.position.set(4.5,0.3,1.5);
+			if(obstacleCount >= 1000) obstacleCount = 0;
+		}
+		*/
 		obstacle = obstacle.rotateZ(0.0004);
 		obstacle = obstacle.rotateY(0.0004);
 		obstacle = obstacle.rotateX(0.0004);
@@ -116,7 +141,11 @@ const THREERobot = function (V_initial, limits, scene) {
 			
 			obst.dist = origin.distanceTo(target) * 100;
 			
-			obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
+			//obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
+			var i1 = intersection; i1.z = cos_alpha * (p.z - intersection.z);
+			var i2 = intersection2; i2.z = cos_alpha * (p.z - intersection2.z);
+			
+			obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
 			
 			//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
 			if(obst.x_up < obst.x_down)
