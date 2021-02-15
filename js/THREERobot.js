@@ -46,14 +46,13 @@ const THREERobot = function (V_initial, limits, scene) {
 	var xing2 = null;
 	window.rotateObstacle = true;
 	
-	var t = 0, dt = 0.0005, a = {x: 3, y: 3, z: 1}, b = {x: 4.5, y: 0.3, z: 1.5};
 	function lerp(a, b, t) {return a + (b - a) * t}
 	function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
 	
+	var t = 0, dt = 0.0002;
+	
 	function projectObstacle()
 	{
-		//if(!window.rotateObstacle) return;
-		//obstacleCount++;
 		scene.add(obstacle);
 		if(box == null)
 		{
@@ -65,21 +64,42 @@ const THREERobot = function (V_initial, limits, scene) {
 			});
 			var geometry = new THREE.BoxGeometry(1, 1, 1);
 			obstacle = new THREE.Mesh(geometry, mat);
-			obstacle.position.set(3,3,1);
+			/*
+			if(plane == "horizontal")
+			{
+				obstacle.position.set(5,0,1);
+			}
+			else
+			{
+				obstacle.position.set(3,3,1);
+			}
+			*/
+			obstacle.scale.set(1.5, 4.5, 2.5);
 			scene.add(obstacle);
-			
 			box = new THREE.BoxHelper( obstacle, 0xffff00 );
 			scene.add( box );						
 		}		
 		
-		obstacle.scale.set(1.5, 4.5, 2.5);
+		var a = {x: 3, y: 3, z: 1}, b = {x: 4.5, y: 0.5, z: 2};
+		if(plane == "horizontal")
+		{
+			a = {x: 5, y: -1, z: 1}; 
+			b = {x: 6.5, y: 1, z: 1};			
+		}
+		
 		
 		var newX = lerp(a.x, b.x, ease(t));   // interpolate between a and b where
 		var newY = lerp(a.y, b.y, ease(t));   // t is first passed through a easing
 		var newZ = lerp(a.z, b.z, ease(t));   // function in this example.
 		obstacle.position.set(newX, newY, newZ);  // set new position
+		
 		t += dt;
-		if (t <= 0 || t >=1) dt = -dt; 
+		
+		if (t <= 0 || t >=1) 
+		{
+			dt = -dt; 
+			waitThere = true;			
+		}
 		
 		/*
 		if(obstacleCount < 500)
@@ -124,37 +144,83 @@ const THREERobot = function (V_initial, limits, scene) {
 		if(intersection != null)
 		{
 			var obst = {};
-			var sin_alpha = Math.abs(target.z - origin.z) / origin.distanceTo(target);
-			var cos_alpha = Math.sqrt(Math.pow(target.x - origin.x,2) + Math.pow(target.y - origin.y,2)) / origin.distanceTo(target);
-			
-			obst.x_up = origin.distanceTo(intersection) * 100;
-			
-			var p = {z: bbox.max.z};
-			if(origin.z > target.z) obst.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
-			
-			obst.y_up = cos_alpha * (p.z - intersection.z)  * 100;
-
-			obst.x_down = origin.distanceTo(intersection2)  * 100;
-			if(origin.z < target.z) obst.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
-
-			obst.y_down = cos_alpha * (p.z - intersection2.z)  * 100;
-			
-			obst.dist = origin.distanceTo(target) * 100;
-			
-			//obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
-			var i1 = intersection; i1.z = cos_alpha * (p.z - intersection.z);
-			var i2 = intersection2; i2.z = cos_alpha * (p.z - intersection2.z);
-			
-			obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
-			
-			//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
-			if(obst.x_up < obst.x_down)
+			if(plane == "vertical")
 			{
-				Vars.obstacle = obst;
+
+				var sin_alpha = Math.abs(target.z - origin.z) / origin.distanceTo(target);
+				var cos_alpha = Math.sqrt(Math.pow(target.x - origin.x,2) + Math.pow(target.y - origin.y,2)) / origin.distanceTo(target);
+				
+				obst.x_up = origin.distanceTo(intersection) * 100;
+				
+				var p = {z: bbox.max.z};
+				if(origin.z > target.z) obst.x_up -= 100 * Math.abs(p.z - intersection.z) * sin_alpha;
+				
+				obst.y_up = cos_alpha * (p.z - intersection.z)  * 100;
+
+				obst.x_down = origin.distanceTo(intersection2)  * 100;
+				if(origin.z < target.z) obst.x_down += 100 * Math.abs(p.z - intersection2.z) * sin_alpha;
+
+				obst.y_down = cos_alpha * (p.z - intersection2.z)  * 100;
+				
+				obst.dist = origin.distanceTo(target) * 100;
+				
+				//obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
+				var i1 = intersection; i1.z = cos_alpha * (p.z - intersection.z);
+				var i2 = intersection2; i2.z = cos_alpha * (p.z - intersection2.z);
+				
+				obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
+				
+				//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
+				if(obst.x_up < obst.x_down)
+				{
+					Vars.obstacle = obst;
+				}
+				else
+				{
+					alert(obst.x_up + "<" + obst.x_down);
+				}
 			}
-			else
+			else // horizontal
 			{
-				alert(obst.x_up + "<" + obst.x_down);
+
+				var sin_alpha = Math.abs(target.x - origin.x) / origin.distanceTo(target);
+				var cos_alpha = Math.sqrt(Math.pow(origin.distanceTo(target),2) - Math.pow(target.x - origin.x,2)) / origin.distanceTo(target);
+				
+				obst.x_up = origin.distanceTo(intersection) * 100;
+				
+				var p = {x: bbox.min.x};
+				if(origin.x > target.x) obst.x_up -= 100 * Math.abs(p.x - intersection.x) * sin_alpha;
+				
+				//obst.y_up = -cos_alpha * (p.x - intersection.x)  * 100;
+				obst.y_up = cos_alpha * (intersection.x - p.x) * 100;
+				
+
+				obst.x_down = origin.distanceTo(intersection2)  * 100;
+				
+				if(origin.x < target.x) obst.x_down += 100 * Math.abs(p.x - intersection2.x) * sin_alpha;
+
+				//obst.y_down = -cos_alpha * (p.x - intersection2.x)  * 100;
+				
+				obst.y_down = cos_alpha * (intersection2.x - p.x) * 100;
+				
+				obst.dist = origin.distanceTo(target) * 100;
+				
+				//obst.perimeter = intersection.distanceTo(intersection2) * 100 + obst.y_up + obst.y_down + cos_alpha * intersection.distanceTo(intersection2) * 100;
+				var i1 = intersection; i1.x = cos_alpha * (p.x - intersection.x);
+				var i2 = intersection2; i2.x = cos_alpha * (p.x - intersection2.x);
+				
+				obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
+				
+				//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
+				if(obst.x_up < obst.x_down)
+				{
+					Vars.obstacle = obst;
+				}
+				else
+				{
+					alert(obst.x_up + "<" + obst.x_down);
+				}
+
 			}
 			
 			const material = new THREE.MeshBasicMaterial( {color: 0xFF0000} );
