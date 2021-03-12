@@ -676,9 +676,14 @@ const sleep = (milliseconds) => {
 }
 
 var messageBackup = "";
+
+function getMidpoint(p1,p2)
+{
+	return {x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2, z: (p1.z + p2.z) / 2};
+}
+
 function isCollision()
 {
-	
 	var jpos = [[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
 	var d2r = 0.0174533;
 	var angles = [0,0,0,0,0,0];
@@ -688,20 +693,22 @@ function isCollision()
 		doWait = false;
 		for(var j=2;j<jpos.length;j++)
 		{
+			var old_point = {x: jpos[j-1][0], y: jpos[j-1][1], z: jpos[j-1][2]};
 			var point = {x: jpos[j][0], y: jpos[j][1], z: jpos[j][2]};
-			var midpoint = {x: (jpos[j-1][0] + point.x) / 2, y: (jpos[j-1][1] + point.y) / 2, z: (jpos[j][2] + point.z) / 2};
+			var midpoint = getMidpoint(old_point,point);
+			var points = [old_point,getMidpoint(old_point,midpoint),midpoint,getMidpoint(midpoint,point),point];
+			var max_k = points.length;
+			for(var k=1;k<max_k;k++) points.push(points[k-1],points[k]);
 			
-			if(window.bbox.containsPoint(point))
-			{
-				console.log("Potential collision detected with joint J" + j + ". Waiting...");
-				$("#elementName").text("Potential collision detected with joint J" + j + ". Waiting...");
-				return true;
-			} else	if(window.bbox.containsPoint(midpoint))
-			{
-				console.log("Potential collision detected with link: J" + (j-1) + "->J" + j + ". Waiting...");
-				$("#elementName").text("Potential collision detected with link: J" + (j-1) + "-J" + j + ". Waiting...");
-				return true;
-			}			
+			for(var k=0;k<points.length;k++)
+			{				
+				if(window.bbox.containsPoint(points[k]))
+				{
+					console.log("Potential collision detected with link: J" + (j-1) + "->J" + j + ". Waiting...");
+					$("#elementName").text("Potential collision detected with link: J" + (j-1) + "-J" + j + ". Waiting...");
+					return true;
+				}			
+			}
 		}
 	
 	return false;
