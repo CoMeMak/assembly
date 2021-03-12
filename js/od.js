@@ -371,9 +371,9 @@ async function moveToOD(Params, Vars, tgt)
 		window.checkCollisions = true;
 		
 		var target = {tcp: {}};
-		target.tcp.x = cur_x; target.tcp.y = cur_y; target.tcp.z = cur_z;
-		target.tcp.rx = 0; target.tcp.ry = 180; target.tcp.rz = 0;
-		await driveTo(Params, Vars, target);
+		//target.tcp.x = cur_x; target.tcp.y = cur_y; target.tcp.z = cur_z;
+		//target.tcp.rx = 0; target.tcp.ry = 180; target.tcp.rz = 0;
+		//await driveTo(Params, Vars, target);
 		
 		var cur_rx = parseFloat($("#rx").val() + "");
 		var cur_ry = parseFloat($("#ry").val() + "");
