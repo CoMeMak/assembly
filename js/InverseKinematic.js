@@ -452,11 +452,132 @@ define((require, exports, module) => {
       result[1] = vector[1] / length
       result[2] = vector[2] / length
     }
+	
+	forward(R0, R1, R2, R3, R4, R5) {
+		const a = Math.cos(R0)
+		const b = Math.sin(R0)
+		const c = this.geometry[0][0]
+		const d = this.geometry[0][1]
+		const e = this.geometry[0][2]
+		const f = Math.cos(R1)
+		const g = Math.sin(R1)
+		const h = this.geometry[1][0]
+		const i = this.geometry[1][1]
+		const j = this.geometry[1][2]
+		const k = Math.cos(R2)
+		const l = Math.sin(R2)
+		const m = this.geometry[2][0]
+		const n = this.geometry[2][1]
+		const o = this.geometry[2][2]
+		const p = Math.cos(R3)
+		const q = Math.sin(R3)
+		const r = this.geometry[3][0]
+		const s = this.geometry[3][1]
+		const t = this.geometry[3][2]
+		const u = Math.cos(R4)
+		const v = Math.sin(R4)
+		const w = this.geometry[4][0]
+		const x = this.geometry[4][1]
+		const y = this.geometry[4][2]
+		const A = Math.cos(R5)
+		const B = Math.sin(R5)
+		// const C = 0 // this.geometry[5][0]
+		// const D = 0 // this.geometry[5][1]
+		// const E = 0 // this.geometry[5][2]
+
+		const jointsResult = [[], [], [], [], [], []]
+
+		jointsResult[0][0] = 0
+		jointsResult[0][1] = 0
+		jointsResult[0][2] = 0
+
+		jointsResult[1][0] = jointsResult[0][0] + a * c + b * e
+		jointsResult[1][1] = jointsResult[0][1] + d
+		jointsResult[1][2] = jointsResult[0][2] + -b * c + a * e
+
+		jointsResult[2][0] = jointsResult[1][0] + a * f * h - a * g * i + b * j
+		jointsResult[2][1] = jointsResult[1][1] + g * h + f * i
+		jointsResult[2][2] = jointsResult[1][2] - b * f * h + b * g * i + a * j
+
+		jointsResult[3][0] = jointsResult[2][0] + a * f * k * m - a * g * l * m - a * g * k * n - a * f * l * n + b * o
+		jointsResult[3][1] = jointsResult[2][1] + g * k * m + f * l * m + f * k * n - g * l * n
+		jointsResult[3][2] = jointsResult[2][2] - b * f * k * m + b * g * l * m + b * g * k * n + b * f * l * n + a * o
+
+		jointsResult[4][0] = jointsResult[3][0] + a * f * k * r - a * g * l * r - a * g * k * p * s - a * f * l * p * s + b * q * s + b * p * t + a * g * k * q * t + a * f * l * q * t
+		jointsResult[4][1] = jointsResult[3][1] + g * k * r + f * l * r + f * k * p * s - g * l * p * s - f * k * q * t + g * l * q * t
+		jointsResult[4][2] = jointsResult[3][2] - b * f * k * r + b * g * l * r + b * g * k * p * s + b * f * l * p * s + a * q * s + a * p * t - b * g * k * q * t - b * f * l * q * t
+
+		jointsResult[5][0] = jointsResult[4][0] + a * f * k * u * w - a * g * l * u * w - a * g * k * p * v * w - a * f * l * p * v * w + b * q * v * w - a * g * k * p * u * x - a * f * l * p * u * x + b * q * u * x - a * f * k * v * x + a * g * l * v * x + b * p * y + a * g * k * q * y + a * f * l * q * y
+		jointsResult[5][1] = jointsResult[4][1] + g * k * u * w + f * l * u * w + f * k * p * v * w - g * l * p * v * w + f * k * p * u * x - g * l * p * u * x - g * k * v * x - f * l * v * x - f * k * q * y + g * l * q * y
+		jointsResult[5][2] = jointsResult[4][2] - b * f * k * u * w + b * g * l * u * w + b * g * k * p * v * w + b * f * l * p * v * w + a * q * v * w + b * g * k * p * u * x + b * f * l * p * u * x + a * q * u * x + b * f * k * v * x - b * g * l * v * x + a * p * y - b * g * k * q * y - b * f * l * q * y
+
+		const M = [
+		  [a * g * k * p * u + a * f * l * p * u - b * q * u + a * f * k * v - a * g * l * v,
+			-B * b * p - B * a * g * k * q - B * a * f * l * q + A * a * f * k * u - A * a * g * l * u - A * a * g * k * p * v - A * a * f * l * p * v + A * b * q * v,
+			A * b * p + A * a * g * k * q + A * a * f * l * q + B * a * f * k * u - B * a * g * l * u - B * a * g * k * p * v - B * a * f * l * p * v + B * b * q * v],
+		  [-f * k * p * u + g * l * p * u + g * k * v + f * l * v,
+			B * f * k * q - B * g * l * q + A * g * k * u + A * f * l * u + A * f * k * p * v - A * g * l * p * v,
+			-A * f * k * q + A * g * l * q + B * g * k * u + B * f * l * u + B * f * k * p * v - B * g * l * p * v],
+		  [-b * g * k * p * u - b * f * l * p * u - a * q * u - b * f * k * v + b * g * l * v,
+			-B * a * p + B * b * g * k * q + B * b * f * l * q - A * b * f * k * u + A * b * g * l * u + A * b * g * k * p * v + A * b * f * l * p * v + A * a * q * v,
+			A * a * p - A * b * g * k * q - A * b * f * l * q - B * b * f * k * u + B * b * g * l * u + B * b * g * k * p * v + B * b * f * l * p * v + B * a * q * v],
+		]
+
+		// http://www.staff.city.ac.uk/~sbbh653/publications/euler.pdf
+
+		let θ = 0
+		let ψ = 0
+		let φ = 0
+		if (M[2][0] !== 1 || M[2][0] !== -1) {
+		  θ = Math.PI + Math.asin(M[2][0])
+		  ψ = Math.atan2(M[2][1] / Math.cos(θ), M[2][2] / Math.cos(θ))
+		  φ = Math.atan2(M[1][0] / Math.cos(θ), M[0][0] / Math.cos(θ))
+		} else {
+		  φ = 0 // anything; can set to
+		  if (M[2][0] === -1) {
+			θ = Math.PI / 2
+			ψ = φ + Math.atan2(M[0][1], M[0][2])
+		  } else {
+			θ = -Math.PI / 2
+			ψ = -φ + Math.atan2(-M[0][1], -M[0][2])
+		  }
+		}
+
+		jointsResult[5][3] = ψ
+		jointsResult[5][4] = θ
+		jointsResult[5][5] = φ
+
+		if (this.debug) {
+		  console.log('+++++++++forward KINEMATICS++++++++++')
+		  console.log(`J0 X ${jointsResult[0][0]} Y ${jointsResult[0][1]} Z ${jointsResult[0][2]}`)
+		  console.log(`J1 X ${jointsResult[1][0]} Y ${jointsResult[1][1]} Z ${jointsResult[1][2]}`)
+		  console.log(`J2 X ${jointsResult[2][0]} Y ${jointsResult[2][1]} Z ${jointsResult[2][2]}`)
+		  console.log(`J4 X ${jointsResult[4][0]} Y ${jointsResult[4][1]} Z ${jointsResult[4][2]}`)
+		  console.log(`J5 X ${jointsResult[5][0]} Y ${jointsResult[5][1]} Z ${jointsResult[5][2]}`)
+		  console.log(`J5 A ${jointsResult[5][3]} B ${jointsResult[5][4]} C ${jointsResult[5][5]}`)
+		  console.log(`---------forward KINEMATICS----------${jointsResult[1][1]}`)
+		}
+
+		return jointsResult
+	  }
   }
 
   function kinematic() {
     return InverseKinematic
   }
+  
+    /**
+   * calculateCoordinates - calculate joint coordinates based on angles
+   *
+   * @param  {number} R0 angle for joint 0
+   * @param  {number} R1 angle for joint 1
+   * @param  {number} R2 angle for joint 2
+   * @param  {number} R3 angle for joint 3
+   * @param  {number} R4 angle for joint 4
+   * @param  {number} R5 angle for joint 5
+   * @return {Array}    [[x,z,z]...[x,y,z,a,b,c]]
+   */
+  
 
   module.exports = InverseKinematic
 })

@@ -49,7 +49,7 @@ const THREERobot = function (V_initial, limits, scene) {
 	function lerp(a, b, t) {return a + (b - a) * t}
 	function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
 	
-	var t = 0, dt = 0.0002;
+	var t = 0, dt = 0.0004;
 	
 	function projectObstacle()
 	{
@@ -78,9 +78,10 @@ const THREERobot = function (V_initial, limits, scene) {
 			scene.add(obstacle);
 			box = new THREE.BoxHelper( obstacle, 0xffff00 );
 			scene.add( box );						
+			
 		}		
 		
-		var a = {x: 3, y: 3, z: 1}, b = {x: 4.5, y: 0.5, z: 2};
+		var a = {x: 4, y: 3, z: 1}, b = {x: 5.5, y: 0.5, z: 2};
 		if(plane == "horizontal")
 		{
 			a = {x: 5, y: -1, z: 1}; 
@@ -112,9 +113,9 @@ const THREERobot = function (V_initial, limits, scene) {
 			if(obstacleCount >= 1000) obstacleCount = 0;
 		}
 		*/
-		obstacle = obstacle.rotateZ(0.0004);
-		obstacle = obstacle.rotateY(0.0004);
-		obstacle = obstacle.rotateX(0.0004);
+		obstacle = obstacle.rotateZ(0.0003);
+		obstacle = obstacle.rotateY(0.0003);
+		obstacle = obstacle.rotateX(0.0003);
 		
 		box.update(obstacle);
 		
@@ -140,6 +141,12 @@ const THREERobot = function (V_initial, limits, scene) {
 		var intersection2 = ray2.intersectBox(bbox);
 		//intersection.z +=  0.8;
 		//intersection2.z +=  0.8;
+		
+		var bbox2 = new THREE.Box3().setFromObject(box);
+		var buf = 0.5;
+		bbox2.max.x += buf; bbox2.max.y += buf; bbox2.max.z += buf;
+		bbox2.min.x -= buf; bbox2.min.y -= buf; bbox2.min.z -= buf;
+		window.bbox = bbox2;
 		
 		if(intersection != null)
 		{
