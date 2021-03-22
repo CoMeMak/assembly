@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Handtrack.js : A library for prototyping realtime handtracking in the browser. </title>
+  <link rel="stylesheet" href="https://unpkg.com/carbon-components@latest/css/carbon-components.css" />
+  
+  <style>
+  body {
+    padding: 20px;
+}
+
+.p20 {
+    padding: 20px;
+}
+
+.canvasbox {
+    border-radius: 3px;
+    margin-right: 10px;
+    width: 450px;
+    height: 338px;
+    border-bottom: 3px solid #0063FF;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.2), 0 4px 10px 0 #00000030;
+
+}
+
+.block {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+
+.mb10 {
+    margin-bottom: 10px
+}
+
+.mt10 {
+    margin-top: 10px
+}
+
+.updatenote {
+    padding: 10px;
+    background: rgb(245, 147, 20);
+    color: white;
+    display: inline;
+}
+  </style>
+</head>
+
+<body class="bx--body p20">
+  <!-- <img id="img" src="hand.jpg"/>  -->
+  <div class="p20">
+    Handtrack.js allows you prototype handtracking interactions in the browser in 3 lines of code.
+  </div>
+  <div class="mb10">
+    <button  id="trackbutton" class="bx--btn bx--btn--secondary" type="button" disabled>
+      Toggle Video
+    </button>
+    <button id="nextimagebutton" class="mt10 bx--btn bx--btn--secondary" type="button" disabled>
+      Next Image
+    </button>
+    <div id="updatenote" class="updatenote mt10"> loading model ..</div>
+  </div>
+  <video class="videobox canvasbox" autoplay="autoplay" id="myvideo"></video>
+  <canvas id="canvas" class="border canvasbox"></canvas>
+  <div class="mt10">
+    <img src="images/1.jpg" class="canvasbox  hidden" id="handimage" alt="">
+
+  </div>
+
+  <script src="https://unpkg.com/carbon-components@latest/scripts/carbon-components.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/handtrackjs@latest/dist/handtrack.min.js"> </script>
+  <script>
+  
+  const video = document.getElementById("myvideo");
+const handimg = document.getElementById("handimage");
+const canvas = document.getElementById("canvas");
+const context = canvas.getContext("2d");
+let trackButton = document.getElementById("trackbutton");
+let nextImageButton = document.getElementById("nextimagebutton");
+let updateNote = document.getElementById("updatenote");
+
+let imgindex = 1
+let isVideo = false;
+let model = null;
+
+// video.width = 500
+// video.height = 400
+
+const modelParams = {
+    flipHorizontal: true,   // flip e.g for video  
+    maxNumBoxes: 1,        // maximum number of boxes to detect
+    iouThreshold: 0.5,      // ioU threshold for non-max suppression
+    scoreThreshold: 0.6,    // confidence threshold for predictions.
+}
+
+function startVideo() {
+    handTrack.startVideo(video).then(function (status) {
+        console.log("video started", status);
+        if (status) {
+            updateNote.innerText = "Video started. Now tracking"
+            isVideo = true
+            runDetection()
+        } else {
+            updateNote.innerText = "Please enable video"
+        }
+    });
+}
+
+function toggleVideo() {
+    if (!isVideo) {
+        updateNote.innerText = "Starting video"
+        startVideo();
+    } else {
+        updateNote.innerText = "Stopping video"
+        handTrack.stopVideo(video)
+        isVideo = false;
+        updateNote.innerText = "Video stopped"
+    }
+}
+
+
+
+nextImageButton.addEventListener("click", function(){
+    nextImage();
+});
+
+trackButton.addEventListener("click", function(){
+    toggleVideo();
+});
+
+function nextImage() {
+
+    imgindex++;
+    handimg.src = "images/" + imgindex % 15 + ".jpg"
+    // alert(handimg.src)
+    runDetectionImage(handimg)
+}
+
+const channel = new BroadcastChannel('hands');
+
+function runDetection() {
+    model.detect(video).then(predictions => {
+        console.log("Predictions: ", predictions);
+		channel.postMessage(predictions);
+        model.renderPredictions(predictions, canvas, context, video);
+        if (isVideo) {
+            requestAnimationFrame(runDetection);
+        }
+    });
+}
+
+function runDetectionImage(img) {
+    model.detect(img).then(predictions => {
+        console.log("Predictions: ", predictions);
+        model.renderPredictions(predictions, canvas, context, img);
+    });
+}
+
+// Load the model.
+handTrack.load(modelParams).then(lmodel => {
+    // detect objects in the image.
+    model = lmodel
+    updateNote.innerText = "Loaded Model!"
+    runDetectionImage(handimg)
+    trackButton.disabled = false
+    nextImageButton.disabled = false
+});
+  
+  </script>
+</body>
+
+</html>
