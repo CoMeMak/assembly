@@ -37,6 +37,18 @@ const THREERobot = function (V_initial, limits, scene) {
     0x0,
   ]
   */
+	
+	
+	var handbox = [1,1,1,1];
+	const channel = new BroadcastChannel('hands');
+	channel.addEventListener ('message', (event) => {
+		console.log(event.data);
+		if(event.data.length > 0)
+		{
+			handbox = event.data[0].bbox;				
+		}
+	});
+	
 	var sceneObjects = [];
 	
 	var arrowHelper = null;
@@ -49,10 +61,14 @@ const THREERobot = function (V_initial, limits, scene) {
 	function lerp(a, b, t) {return a + (b - a) * t}
 	function ease(t) { return t<0.5 ? 2*t*t : -1+(4-2*t)*t}
 	
-	var t = 0, dt = 0.0004;
+	var t = 0, dt = 0.0007;
+	// curl -d "<?xml version='1.0'?><methodCall><methodName>getBN</methodName></methodCall>" http://localhost:1337/
 	
+	var HANDS = false;
+	var cycle = 0;
 	function projectObstacle()
 	{
+		cycle++;
 		scene.add(obstacle);
 		if(box == null)
 		{
@@ -81,47 +97,60 @@ const THREERobot = function (V_initial, limits, scene) {
 			
 		}		
 		
-		var a = {x: 4, y: 3, z: 1}, b = {x: 5.5, y: 0.5, z: 2};
-		if(plane == "horizontal")
+		if(!HANDS)
 		{
-			a = {x: 5, y: -1, z: 1}; 
-			b = {x: 6.5, y: 1, z: 1};			
+			var a = {x: 4, y: 3, z: 1}, b = {x: 5.5, y: 0.5, z: 2};
+			if(plane == "horizontal")
+			{
+				a = {x: 5, y: -1, z: 1}; 
+				b = {x: 6.5, y: 1, z: 1};			
+			}
+			
+			var newX = lerp(a.x, b.x, ease(t));   // interpolate between a and b where
+			var newY = lerp(a.y, b.y, ease(t));   // t is first passed through a easing
+			var newZ = lerp(a.z, b.z, ease(t));   // function in this example.
+		
+			obstacle.position.set(newX, newY, newZ);  // set new position
+			t += dt;
+		
+			if (t <= 0 || t >=1) 
+			{
+				dt = -dt; 
+				waitThere = true;			
+			}
+			
+			obstacle = obstacle.rotateZ(0.0008);
+			obstacle = obstacle.rotateY(0.0008);
+			obstacle = obstacle.rotateX(0.0008);
+		}
+		else if(cycle % 10 == 0)
+		{
+			
+			var w = handbox[2] / 100;
+			var h = handbox[3] / 100;
+			var y = handbox[0] / 50;
+			var z = handbox[1] / 100;
+			
+			h = 6 - z;
+			console.log(handbox);
+			
+			var a = w * h / 5;
+			obstacle.scale.set(5, w, h);			
+			//obstacle.position.set(h, w, 1 + h);
+			obstacle.position.set(4, y/2, h/2 - 0.8);
 		}
 		
-		
-		var newX = lerp(a.x, b.x, ease(t));   // interpolate between a and b where
-		var newY = lerp(a.y, b.y, ease(t));   // t is first passed through a easing
-		var newZ = lerp(a.z, b.z, ease(t));   // function in this example.
-		obstacle.position.set(newX, newY, newZ);  // set new position
-		
-		t += dt;
-		
-		if (t <= 0 || t >=1) 
-		{
-			dt = -dt; 
-			waitThere = true;			
-		}
-		
-		/*
-		if(obstacleCount < 500)
-		{
-			obstacle.position.set(3,3,1);
-		}
-		else
-		{
-			obstacle.position.set(4.5,0.3,1.5);
-			if(obstacleCount >= 1000) obstacleCount = 0;
-		}
-		*/
-		obstacle = obstacle.rotateZ(0.0003);
-		obstacle = obstacle.rotateY(0.0003);
-		obstacle = obstacle.rotateX(0.0003);
 		
 		box.update(obstacle);
 		
 		if(Robot.origin == null) return;
 		
 		var bbox = new THREE.Box3().setFromObject(box);
+		
+		
+		var sc = {"x": (bbox.max.x + bbox.min.x) / 2, "y": c_y = (bbox.max.y + bbox.min.y) / 2, "z": (bbox.max.z + bbox.min.z) / 2};
+		
+		window.bsphere = new THREE.Sphere(sc,5);
 		
 		var origin = new THREE.Vector3(Robot.origin.x / 100, Robot.origin.y / 100, (Robot.origin.z - 80) / 100); 
 		var target = new THREE.Vector3(Robot.target.tcp.x / 100, Robot.target.tcp.y / 100, (Robot.target.tcp.z - 80) / 100);
@@ -143,7 +172,7 @@ const THREERobot = function (V_initial, limits, scene) {
 		//intersection2.z +=  0.8;
 		
 		var bbox2 = new THREE.Box3().setFromObject(box);
-		var buf = 0.5;
+		var buf = 0.1;
 		bbox2.max.x += buf; bbox2.max.y += buf; bbox2.max.z += buf;
 		bbox2.min.x -= buf; bbox2.min.y -= buf; bbox2.min.z -= buf;
 		window.bbox = bbox2;
@@ -177,15 +206,7 @@ const THREERobot = function (V_initial, limits, scene) {
 				
 				obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
 				
-				//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
-				if(obst.x_up < obst.x_down)
-				{
-					Vars.obstacle = obst;
-				}
-				else
-				{
-					alert(obst.x_up + "<" + obst.x_down);
-				}
+				Vars.obstacle = obst;				
 			}
 			else // horizontal
 			{
@@ -219,14 +240,7 @@ const THREERobot = function (V_initial, limits, scene) {
 				obst.perimeter = (origin.distanceTo(i1) + i1.distanceTo(i2) + i2.distanceTo(target)) * 100;
 				
 				//console.log("x_up = " + obst.x_up + " x_down = " + obst.x_down);
-				if(obst.x_up < obst.x_down)
-				{
-					Vars.obstacle = obst;
-				}
-				else
-				{
-					alert(obst.x_up + "<" + obst.x_down);
-				}
+				Vars.obstacle = obst;				
 
 			}
 			
@@ -321,8 +335,14 @@ const THREERobot = function (V_initial, limits, scene) {
 			}
 			Vars.cubelet = {x: obj.o.position.x * 100, y: obj.o.position.y * 100, z: obj.o.position.z * 100};
 		}			
-		
-		setTimeout(moveObjects,10);
+		if(!HANDS)
+		{
+			setTimeout(moveObjects,10);
+		}
+		else
+		{
+			setTimeout(moveObjects,100);
+		}
 	}
 
   function createCube(x, y, z, w, h, d, min, max, jointNumber) {
